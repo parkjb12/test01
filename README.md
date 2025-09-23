@@ -4,7 +4,7 @@
 본 레포는 두 가지 핵심 스크립트로 구성됩니다:
 
 - **모델 다운로드:** `download.py` – Hugging Face Hub에서 LLM 체크포인트를 로컬로 내려받습니다.
-- **원샷 프루닝:** `oneshot_prune.py` – PyTorch/Transformers 기반으로 LLaMA-2 13B를 원샷(L1 magnitude) 방식으로 프루닝하고 저장합니다.
+- **원샷 프루닝:** `oneshot_prune.py` – PyTorch/Transformers 기반으로 LLM 신경망을 원샷(L1 magnitude) 방식으로 프루닝하고 저장합니다.
 
 ---
 
