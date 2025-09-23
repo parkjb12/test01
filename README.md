@@ -4,7 +4,7 @@
 본 레포는 두 가지 핵심 스크립트로 구성됩니다:
 
 - **모델 다운로드:** `download.py` – Hugging Face Hub에서 LLM 체크포인트를 로컬로 내려받습니다.
-- **원샷 프루닝:** `llama2_13b_oneshot_prune.py` – PyTorch/Transformers 기반으로 LLaMA-2 13B를 원샷(L1 magnitude) 방식으로 프루닝하고 저장합니다.
+- **원샷 프루닝:** `oneshot_prune.py` – PyTorch/Transformers 기반으로 LLaMA-2 13B를 원샷(L1 magnitude) 방식으로 프루닝하고 저장합니다.
 
 ---
 
@@ -58,19 +58,19 @@ python download.py
 
 ---
 
-## ✂️ 원샷 프루닝 – `llama2_13b_oneshot_prune.py`
+## ✂️ 원샷 프루닝 – `oneshot_prune.py`
 LLaMA-2 13B를 로드하고 **L1 magnitude 기반 원샷 프루닝**을 수행해 저장합니다. 기본적으로 `nn.Linear`의 `weight`를 대상으로 하며, `lm_head`는 제외됩니다. 로그 문자열은 “global”이라 표기되지만, 실제 구현은 **레이어별(L1) 원샷**으로 동작해 **메모리 사용량을 줄입니다.**
 
 ### 사용 예시
 
 #### 1) GPU(권장, FP16)
 ```bash
-python llama2_13b_oneshot_prune.py   --model_id meta-llama/Llama-2-13b-hf   --device cuda --dtype fp16   --sparsity 0.5   --save_dir ./llama2-13b-pruned-50   --eval_texts "Large language models are powerful." "프루닝 후 성능 확인 텍스트"
+python oneshot_prune.py   --model_id meta-llama/Llama-2-13b-hf   --device cuda --dtype fp16   --sparsity 0.5   --save_dir ./llama2-13b-pruned-50   --eval_texts "Large language models are powerful." "프루닝 후 성능 확인 텍스트"
 ```
 
 #### 2) CPU(FP16) – 메모리 절약 모드
 ```bash
-python llama2_13b_oneshot_prune.py   --model_id meta-llama/Llama-2-13b-hf   --device cpu --dtype fp16   --sparsity 0.5   --save_dir ./llama2-13b-pruned-50
+python oneshot_prune.py   --model_id meta-llama/Llama-2-13b-hf   --device cpu --dtype fp16   --sparsity 0.5   --save_dir ./llama2-13b-pruned-50
 ```
 
 ### 주요 인자
@@ -114,7 +114,7 @@ python llama2_13b_oneshot_prune.py   --model_id meta-llama/Llama-2-13b-hf   --de
 ```
 .
 ├── download.py                     # HF에서 모델 내려받기
-├── llama2_13b_oneshot_prune.py     # LLaMA-2 13B 원샷 프루닝 스크립트
+├── oneshot_prune.py     # LLaMA-2 13B 원샷 프루닝 스크립트
 └── README.md
 ```
 
@@ -140,7 +140,7 @@ python download.py  # repo_id를 원하는 모델로 수정 가능
 
 3) **프루닝 실행**
 ```bash
-python llama2_13b_oneshot_prune.py   --model_id meta-llama/Llama-2-13b-hf   --device cuda --dtype fp16   --sparsity 0.5   --save_dir ./llama2-13b-pruned-50
+python oneshot_prune.py   --model_id meta-llama/Llama-2-13b-hf   --device cuda --dtype fp16   --sparsity 0.5   --save_dir ./llama2-13b-pruned-50
 ```
 
 4) **(선택) 보정/변환/배포**
