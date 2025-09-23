@@ -1,4 +1,4 @@
-# TANGO2 LLM 원샷 프루닝(One-shot Pruning) – README
+# TANGO2 LLM 원샷 프루닝(One-shot Pruning)
 
 딥러닝 프레임워크 **TANGO2** 환경에서 대형 언어 모델(LLM)을 **원샷 프루닝**으로 최적화(메모리 절감/경량화)하는 예제입니다.  
 본 레포는 두 가지 핵심 스크립트로 구성됩니다:
