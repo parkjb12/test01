@@ -4,5 +4,5 @@ local_dir = snapshot_download(
     repo_id="meta-llama/Llama-3.2-1B",
     local_dir="./Llama-3.2-1B"
 )
-print("Downloaded to::", local_dir)
+print("Downloaded to:", local_dir)
 
