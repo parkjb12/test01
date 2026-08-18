@@ -1,0 +1,403 @@
+==> Web launcher
+  cmd            : bash /home/parkjb/work/Logickor/scripts/auto.sh
+  MODE           : debug (전체의 1% 만 사용)
+  TRAIN_FRACTION : 0.01
+  CONFIG_PATH    : configs/train_gemma4_e4b_sft.yaml
+  RUN_DIR        : runs/gemma4_e4b_sft_high
+  merged model   : runs/gemma4_e4b_sft_high/merged
+  generated dir  : generated/runs/gemma4_e4b_sft_high/merged
+  evaluated glob : evaluated/*.jsonl
+  SEED           : 42
+  GPU            : 0
+  GEN_MODEL_LEN  : 4096
+  JUDGE_MODEL    : gemma
+  JUDGE_MODEL_LEN: 8192
+
+
+==============================================================
+[2026-08-14 13:49:32] Step 0/4: cleaning previous outputs
+==============================================================
+
+==============================================================
+[2026-08-14 13:49:32] Step 1/4: LoRA SFT training (mode=debug, data=0.01) -> runs/gemma4_e4b_sft_high
+==============================================================
+DEBUG RUN: using 1% of the data -> train 6 rows / eval 2 rows
+Using CUDA_VISIBLE_DEVICES=0
+Loading weights:   0%|          | 0/2076 [00:00<?, ?it/s]Loading weights:  59%|█████▉    | 1224/2076 [00:00<00:00, 12234.85it/s]Loading weights: 100%|██████████| 2076/2076 [00:00<00:00, 12267.54it/s]
+warmup_ratio is deprecated and will be removed in v5.2. Use `warmup_steps` instead.
+[RANK 0] The chat template does not include the assistant turn's end-of-turn token in the loss mask; the model may not learn to stop.
+Tokenizing train dataset:   0%|          | 0/6 [00:00<?, ? examples/s]Tokenizing train dataset: 100%|██████████| 6/6 [00:00<00:00, 803.15 examples/s]
+Building labels for train dataset:   0%|          | 0/6 [00:00<?, ? examples/s]Building labels for train dataset: 100%|██████████| 6/6 [00:00<00:00, 1751.52 examples/s]
+Truncating train dataset:   0%|          | 0/6 [00:00<?, ? examples/s]Truncating train dataset: 100%|██████████| 6/6 [00:00<00:00, 2094.19 examples/s]
+Dropping fully masked examples from train dataset:   0%|          | 0/6 [00:00<?, ? examples/s]Dropping fully masked examples from train dataset: 100%|██████████| 6/6 [00:00<00:00, 4341.18 examples/s]
+Tokenizing eval dataset:   0%|          | 0/2 [00:00<?, ? examples/s]Tokenizing eval dataset: 100%|██████████| 2/2 [00:00<00:00, 417.53 examples/s]
+Building labels for eval dataset:   0%|          | 0/2 [00:00<?, ? examples/s]Building labels for eval dataset: 100%|██████████| 2/2 [00:00<00:00, 708.92 examples/s]
+Truncating eval dataset:   0%|          | 0/2 [00:00<?, ? examples/s]Truncating eval dataset: 100%|██████████| 2/2 [00:00<00:00, 769.39 examples/s]
+Dropping fully masked examples from eval dataset:   0%|          | 0/2 [00:00<?, ? examples/s]Dropping fully masked examples from eval dataset: 100%|██████████| 2/2 [00:00<00:00, 1561.25 examples/s]
+The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'eos_token_id': 1, 'bos_token_id': 2, 'pad_token_id': 0}.
+  0%|          | 0/200 [00:00<?, ?it/s]  0%|          | 1/200 [00:02<07:42,  2.33s/it]  1%|          | 2/200 [00:04<07:04,  2.15s/it]  2%|▏         | 3/200 [00:06<06:35,  2.01s/it]  2%|▏         | 4/200 [00:08<06:33,  2.01s/it]  2%|▎         | 5/200 [00:10<06:31,  2.01s/it]  3%|▎         | 6/200 [00:12<06:19,  1.96s/it]  4%|▎         | 7/200 [00:14<06:21,  1.98s/it]  4%|▍         | 8/200 [00:16<06:21,  1.99s/it]  4%|▍         | 9/200 [00:17<06:11,  1.94s/it]  5%|▌         | 10/200 [00:19<06:14,  1.97s/it]                                                {'loss': '4.35', 'grad_norm': '4.975', 'learning_rate': '4.997e-05', 'entropy': '0.3133', 'num_tokens': '2.111e+04', 'mean_token_accuracy': '0.6091', 'epoch': '10'}
+  5%|▌         | 10/200 [00:19<06:14,  1.97s/it]  6%|▌         | 11/200 [00:21<06:05,  1.93s/it]  6%|▌         | 12/200 [00:23<06:08,  1.96s/it]  6%|▋         | 13/200 [00:25<06:09,  1.97s/it]  7%|▋         | 14/200 [00:27<06:00,  1.94s/it]  8%|▊         | 15/200 [00:29<06:02,  1.96s/it]  8%|▊         | 16/200 [00:31<05:54,  1.93s/it]  8%|▊         | 17/200 [00:33<05:57,  1.95s/it]  9%|▉         | 18/200 [00:35<05:58,  1.97s/it] 10%|▉         | 19/200 [00:37<05:50,  1.93s/it] 10%|█         | 20/200 [00:39<05:51,  1.96s/it]                                                {'loss': '0.8057', 'grad_norm': '1.034', 'learning_rate': '4.945e-05', 'entropy': '0.6912', 'num_tokens': '4.222e+04', 'mean_token_accuracy': '0.8499', 'epoch': '20'}
+ 10%|█         | 20/200 [00:39<05:51,  1.96s/it]
+  0%|          | 0/2 [00:00<?, ?it/s][A                                                
+                                     [A{'eval_loss': '2.236', 'eval_runtime': '0.1523', 'eval_samples_per_second': '13.13', 'eval_steps_per_second': '13.13', 'eval_entropy': '0.7179', 'eval_num_tokens': '4.222e+04', 'eval_mean_token_accuracy': '0.5981', 'epoch': '20'}
+ 10%|█         | 20/200 [00:39<05:51,  1.96s/it]
+100%|██████████| 2/2 [00:00<00:00, 24.30it/s][A
+                                             [A 10%|█         | 21/200 [00:41<06:01,  2.02s/it] 11%|█         | 22/200 [00:43<05:50,  1.97s/it] 12%|█▏        | 23/200 [00:45<05:50,  1.98s/it] 12%|█▏        | 24/200 [00:47<05:41,  1.94s/it] 12%|█▎        | 25/200 [00:49<05:42,  1.96s/it] 13%|█▎        | 26/200 [00:51<05:43,  1.98s/it] 14%|█▎        | 27/200 [00:53<05:35,  1.94s/it] 14%|█▍        | 28/200 [00:55<05:37,  1.96s/it] 14%|█▍        | 29/200 [00:57<05:37,  1.97s/it] 15%|█▌        | 30/200 [00:59<05:29,  1.94s/it]                                                {'loss': '0.06478', 'grad_norm': '0.1036', 'learning_rate': '4.829e-05', 'entropy': '0.1727', 'num_tokens': '6.333e+04', 'mean_token_accuracy': '0.9899', 'epoch': '30'}
+ 15%|█▌        | 30/200 [00:59<05:29,  1.94s/it] 16%|█▌        | 31/200 [01:01<05:30,  1.96s/it] 16%|█▌        | 32/200 [01:02<05:23,  1.92s/it] 16%|█▋        | 33/200 [01:04<05:25,  1.95s/it] 17%|█▋        | 34/200 [01:06<05:26,  1.96s/it] 18%|█▊        | 35/200 [01:08<05:18,  1.93s/it] 18%|█▊        | 36/200 [01:10<05:20,  1.95s/it] 18%|█▊        | 37/200 [01:12<05:13,  1.92s/it] 19%|█▉        | 38/200 [01:14<05:15,  1.95s/it] 20%|█▉        | 39/200 [01:16<05:16,  1.96s/it] 20%|██        | 40/200 [01:18<05:08,  1.93s/it]                                                {'loss': '0.001275', 'grad_norm': '0.01006', 'learning_rate': '4.651e-05', 'entropy': '0.007234', 'num_tokens': '8.444e+04', 'mean_token_accuracy': '1', 'epoch': '40'}
+ 20%|██        | 40/200 [01:18<05:08,  1.93s/it]
+  0%|          | 0/2 [00:00<?, ?it/s][A                                                
+                                     [A{'eval_loss': '2.994', 'eval_runtime': '0.1516', 'eval_samples_per_second': '13.19', 'eval_steps_per_second': '13.19', 'eval_entropy': '0.3457', 'eval_num_tokens': '8.444e+04', 'eval_mean_token_accuracy': '0.579', 'epoch': '40'}
+ 20%|██        | 40/200 [01:18<05:08,  1.93s/it]
+100%|██████████| 2/2 [00:00<00:00, 24.31it/s][A
+                                             [A 20%|██        | 41/200 [01:20<05:17,  2.00s/it] 21%|██        | 42/200 [01:22<05:15,  2.00s/it] 22%|██▏       | 43/200 [01:24<05:06,  1.95s/it] 22%|██▏       | 44/200 [01:26<05:07,  1.97s/it] 22%|██▎       | 45/200 [01:28<04:59,  1.93s/it] 23%|██▎       | 46/200 [01:30<05:01,  1.96s/it] 24%|██▎       | 47/200 [01:32<05:01,  1.97s/it] 24%|██▍       | 48/200 [01:34<04:54,  1.94s/it] 24%|██▍       | 49/200 [01:36<04:55,  1.96s/it] 25%|██▌       | 50/200 [01:38<04:55,  1.97s/it]                                                {'loss': '0.0001139', 'grad_norm': '0.005065', 'learning_rate': '4.418e-05', 'entropy': '0.0008615', 'num_tokens': '1.056e+05', 'mean_token_accuracy': '1', 'epoch': '50'}
+ 25%|██▌       | 50/200 [01:38<04:55,  1.97s/it] 26%|██▌       | 51/200 [01:40<04:48,  1.94s/it] 26%|██▌       | 52/200 [01:42<04:50,  1.96s/it] 26%|██▋       | 53/200 [01:43<04:43,  1.93s/it] 27%|██▋       | 54/200 [01:45<04:45,  1.95s/it] 28%|██▊       | 55/200 [01:47<04:45,  1.97s/it] 28%|██▊       | 56/200 [01:49<04:38,  1.94s/it] 28%|██▊       | 57/200 [01:51<04:40,  1.96s/it] 29%|██▉       | 58/200 [01:53<04:40,  1.98s/it] 30%|██▉       | 59/200 [01:55<04:33,  1.94s/it] 30%|███       | 60/200 [01:57<04:34,  1.96s/it]                                                {'loss': '4.404e-05', 'grad_norm': '0.001391', 'learning_rate': '4.134e-05', 'entropy': '0.0003734', 'num_tokens': '1.267e+05', 'mean_token_accuracy': '1', 'epoch': '60'}
+ 30%|███       | 60/200 [01:57<04:34,  1.96s/it]
+  0%|          | 0/2 [00:00<?, ?it/s][A                                                
+                                     [A{'eval_loss': '3.411', 'eval_runtime': '0.1518', 'eval_samples_per_second': '13.17', 'eval_steps_per_second': '13.17', 'eval_entropy': '0.2898', 'eval_num_tokens': '1.267e+05', 'eval_mean_token_accuracy': '0.5905', 'epoch': '60'}
+ 30%|███       | 60/200 [01:57<04:34,  1.96s/it]
+100%|██████████| 2/2 [00:00<00:00, 24.37it/s][A
+                                             [A 30%|███       | 61/200 [01:59<04:34,  1.97s/it] 31%|███       | 62/200 [02:01<04:33,  1.98s/it] 32%|███▏      | 63/200 [02:03<04:33,  1.99s/it] 32%|███▏      | 64/200 [02:05<04:25,  1.95s/it] 32%|███▎      | 65/200 [02:07<04:25,  1.96s/it] 33%|███▎      | 66/200 [02:09<04:18,  1.93s/it] 34%|███▎      | 67/200 [02:11<04:19,  1.95s/it] 34%|███▍      | 68/200 [02:13<04:20,  1.97s/it] 34%|███▍      | 69/200 [02:15<04:13,  1.93s/it] 35%|███▌      | 70/200 [02:17<04:14,  1.96s/it]                                                {'loss': '2.61e-05', 'grad_norm': '0.0009189', 'learning_rate': '3.808e-05', 'entropy': '0.0002369', 'num_tokens': '1.478e+05', 'mean_token_accuracy': '1', 'epoch': '70'}
+ 35%|███▌      | 70/200 [02:17<04:14,  1.96s/it] 36%|███▌      | 71/200 [02:19<04:14,  1.97s/it] 36%|███▌      | 72/200 [02:21<04:07,  1.93s/it] 36%|███▋      | 73/200 [02:23<04:08,  1.96s/it] 37%|███▋      | 74/200 [02:25<04:02,  1.92s/it] 38%|███▊      | 75/200 [02:27<04:03,  1.95s/it] 38%|███▊      | 76/200 [02:29<04:03,  1.96s/it] 38%|███▊      | 77/200 [02:30<03:57,  1.93s/it] 39%|███▉      | 78/200 [02:32<03:58,  1.95s/it] 40%|███▉      | 79/200 [02:34<03:58,  1.97s/it] 40%|████      | 80/200 [02:36<03:51,  1.93s/it]                                                {'loss': '1.992e-05', 'grad_norm': '0.0007205', 'learning_rate': '3.447e-05', 'entropy': '0.0001866', 'num_tokens': '1.689e+05', 'mean_token_accuracy': '1', 'epoch': '80'}
+ 40%|████      | 80/200 [02:36<03:51,  1.93s/it]
+  0%|          | 0/2 [00:00<?, ?it/s][A                                                
+                                     [A{'eval_loss': '3.498', 'eval_runtime': '0.1518', 'eval_samples_per_second': '13.18', 'eval_steps_per_second': '13.18', 'eval_entropy': '0.2812', 'eval_num_tokens': '1.689e+05', 'eval_mean_token_accuracy': '0.5822', 'epoch': '80'}
+ 40%|████      | 80/200 [02:36<03:51,  1.93s/it]
+100%|██████████| 2/2 [00:00<00:00, 24.39it/s][A
+                                             [A 40%|████      | 81/200 [02:38<03:58,  2.00s/it] 41%|████      | 82/200 [02:40<03:50,  1.95s/it] 42%|████▏     | 83/200 [02:42<03:50,  1.97s/it] 42%|████▏     | 84/200 [02:44<03:50,  1.98s/it] 42%|████▎     | 85/200 [02:46<03:43,  1.94s/it] 43%|████▎     | 86/200 [02:48<03:43,  1.96s/it] 44%|████▎     | 87/200 [02:50<03:37,  1.93s/it] 44%|████▍     | 88/200 [02:52<03:38,  1.95s/it] 44%|████▍     | 89/200 [02:54<03:38,  1.97s/it] 45%|████▌     | 90/200 [02:56<03:32,  1.93s/it]                                                {'loss': '1.668e-05', 'grad_norm': '0.0005931', 'learning_rate': '3.062e-05', 'entropy': '0.0001597', 'num_tokens': '1.9e+05', 'mean_token_accuracy': '1', 'epoch': '90'}
+ 45%|████▌     | 90/200 [02:56<03:32,  1.93s/it] 46%|████▌     | 91/200 [02:58<03:33,  1.96s/it] 46%|████▌     | 92/200 [03:00<03:33,  1.97s/it] 46%|████▋     | 93/200 [03:02<03:27,  1.94s/it] 47%|████▋     | 94/200 [03:04<03:27,  1.95s/it] 48%|████▊     | 95/200 [03:06<03:21,  1.92s/it] 48%|████▊     | 96/200 [03:08<03:22,  1.95s/it] 48%|████▊     | 97/200 [03:10<03:22,  1.96s/it] 49%|████▉     | 98/200 [03:11<03:16,  1.93s/it] 50%|████▉     | 99/200 [03:13<03:16,  1.95s/it] 50%|█████     | 100/200 [03:15<03:16,  1.97s/it]                                                 {'loss': '1.488e-05', 'grad_norm': '0.000547', 'learning_rate': '2.662e-05', 'entropy': '0.0001445', 'num_tokens': '2.111e+05', 'mean_token_accuracy': '1', 'epoch': '100'}
+ 50%|█████     | 100/200 [03:15<03:16,  1.97s/it]
+  0%|          | 0/2 [00:00<?, ?it/s][A                                                 
+                                     [A{'eval_loss': '3.502', 'eval_runtime': '0.1514', 'eval_samples_per_second': '13.21', 'eval_steps_per_second': '13.21', 'eval_entropy': '0.2805', 'eval_num_tokens': '2.111e+05', 'eval_mean_token_accuracy': '0.5804', 'epoch': '100'}
+ 50%|█████     | 100/200 [03:16<03:16,  1.97s/it]
+100%|██████████| 2/2 [00:00<00:00, 24.38it/s][A
+                                             [A 50%|█████     | 101/200 [03:17<03:15,  1.98s/it] 51%|█████     | 102/200 [03:19<03:14,  1.99s/it] 52%|█████▏    | 103/200 [03:21<03:08,  1.95s/it] 52%|█████▏    | 104/200 [03:23<03:08,  1.96s/it] 52%|█████▎    | 105/200 [03:25<03:08,  1.98s/it] 53%|█████▎    | 106/200 [03:27<03:02,  1.94s/it] 54%|█████▎    | 107/200 [03:29<03:02,  1.97s/it] 54%|█████▍    | 108/200 [03:31<03:02,  1.98s/it] 55%|█████▍    | 109/200 [03:33<02:56,  1.94s/it] 55%|█████▌    | 110/200 [03:35<02:56,  1.96s/it]                                                 {'loss': '1.375e-05', 'grad_norm': '0.0005071', 'learning_rate': '2.257e-05', 'entropy': '0.0001341', 'num_tokens': '2.322e+05', 'mean_token_accuracy': '1', 'epoch': '110'}
+ 55%|█████▌    | 110/200 [03:35<02:56,  1.96s/it] 56%|█████▌    | 111/200 [03:37<02:51,  1.93s/it] 56%|█████▌    | 112/200 [03:39<02:52,  1.96s/it] 56%|█████▋    | 113/200 [03:41<02:52,  1.98s/it] 57%|█████▋    | 114/200 [03:43<02:47,  1.94s/it] 57%|█████▊    | 115/200 [03:45<02:47,  1.97s/it] 58%|█████▊    | 116/200 [03:47<02:46,  1.98s/it] 58%|█████▊    | 117/200 [03:49<02:40,  1.94s/it] 59%|█████▉    | 118/200 [03:51<02:40,  1.96s/it] 60%|█████▉    | 119/200 [03:53<02:36,  1.93s/it] 60%|██████    | 120/200 [03:55<02:36,  1.96s/it]                                                 {'loss': '1.291e-05', 'grad_norm': '0.0004854', 'learning_rate': '1.859e-05', 'entropy': '0.0001274', 'num_tokens': '2.533e+05', 'mean_token_accuracy': '1', 'epoch': '120'}
+ 60%|██████    | 120/200 [03:55<02:36,  1.96s/it]
+  0%|          | 0/2 [00:00<?, ?it/s][A                                                 
+                                     [A{'eval_loss': '3.519', 'eval_runtime': '0.1516', 'eval_samples_per_second': '13.19', 'eval_steps_per_second': '13.19', 'eval_entropy': '0.2764', 'eval_num_tokens': '2.533e+05', 'eval_mean_token_accuracy': '0.5923', 'epoch': '120'}
+ 60%|██████    | 120/200 [03:55<02:36,  1.96s/it]
+100%|██████████| 2/2 [00:00<00:00, 24.37it/s][A
+                                             [A 60%|██████    | 121/200 [03:57<02:39,  2.02s/it] 61%|██████    | 122/200 [03:59<02:33,  1.97s/it] 62%|██████▏   | 123/200 [04:01<02:32,  1.98s/it] 62%|██████▏   | 124/200 [04:03<02:31,  1.99s/it] 62%|██████▎   | 125/200 [04:04<02:26,  1.95s/it] 63%|██████▎   | 126/200 [04:06<02:25,  1.97s/it] 64%|██████▎   | 127/200 [04:08<02:21,  1.93s/it] 64%|██████▍   | 128/200 [04:10<02:20,  1.95s/it] 64%|██████▍   | 129/200 [04:12<02:19,  1.97s/it] 65%|██████▌   | 130/200 [04:14<02:15,  1.94s/it]                                                 {'loss': '1.219e-05', 'grad_norm': '0.0004576', 'learning_rate': '1.478e-05', 'entropy': '0.0001212', 'num_tokens': '2.744e+05', 'mean_token_accuracy': '1', 'epoch': '130'}
+ 65%|██████▌   | 130/200 [04:14<02:15,  1.94s/it] 66%|██████▌   | 131/200 [04:16<02:15,  1.96s/it] 66%|██████▌   | 132/200 [04:18<02:14,  1.97s/it] 66%|██████▋   | 133/200 [04:20<02:09,  1.94s/it] 67%|██████▋   | 134/200 [04:22<02:09,  1.96s/it] 68%|██████▊   | 135/200 [04:24<02:05,  1.93s/it] 68%|██████▊   | 136/200 [04:26<02:04,  1.95s/it] 68%|██████▊   | 137/200 [04:28<02:03,  1.97s/it] 69%|██████▉   | 138/200 [04:30<01:59,  1.93s/it] 70%|██████▉   | 139/200 [04:32<01:59,  1.96s/it] 70%|███████   | 140/200 [04:34<01:58,  1.97s/it]                                                 {'loss': '1.173e-05', 'grad_norm': '0.0004392', 'learning_rate': '1.124e-05', 'entropy': '0.0001165', 'num_tokens': '2.955e+05', 'mean_token_accuracy': '1', 'epoch': '140'}
+ 70%|███████   | 140/200 [04:34<01:58,  1.97s/it]
+  0%|          | 0/2 [00:00<?, ?it/s][A                                                 
+                                     [A{'eval_loss': '3.533', 'eval_runtime': '0.1516', 'eval_samples_per_second': '13.19', 'eval_steps_per_second': '13.19', 'eval_entropy': '0.2766', 'eval_num_tokens': '2.955e+05', 'eval_mean_token_accuracy': '0.571', 'epoch': '140'}
+ 70%|███████   | 140/200 [04:34<01:58,  1.97s/it]
+100%|██████████| 2/2 [00:00<00:00, 24.37it/s][A
+                                             [A 70%|███████   | 141/200 [04:36<01:57,  1.98s/it] 71%|███████   | 142/200 [04:38<01:55,  1.99s/it] 72%|███████▏  | 143/200 [04:40<01:51,  1.95s/it] 72%|███████▏  | 144/200 [04:42<01:50,  1.97s/it] 72%|███████▎  | 145/200 [04:44<01:49,  1.98s/it] 73%|███████▎  | 146/200 [04:46<01:44,  1.94s/it] 74%|███████▎  | 147/200 [04:48<01:44,  1.97s/it] 74%|███████▍  | 148/200 [04:50<01:42,  1.98s/it] 74%|███████▍  | 149/200 [04:51<01:39,  1.94s/it] 75%|███████▌  | 150/200 [04:53<01:38,  1.97s/it]                                                 {'loss': '1.138e-05', 'grad_norm': '0.0004218', 'learning_rate': '8.052e-06', 'entropy': '0.0001136', 'num_tokens': '3.166e+05', 'mean_token_accuracy': '1', 'epoch': '150'}
+ 75%|███████▌  | 150/200 [04:53<01:38,  1.97s/it] 76%|███████▌  | 151/200 [04:55<01:34,  1.93s/it] 76%|███████▌  | 152/200 [04:57<01:33,  1.95s/it] 76%|███████▋  | 153/200 [04:59<01:32,  1.97s/it] 77%|███████▋  | 154/200 [05:01<01:29,  1.94s/it] 78%|███████▊  | 155/200 [05:03<01:28,  1.96s/it] 78%|███████▊  | 156/200 [05:05<01:26,  1.97s/it] 78%|███████▊  | 157/200 [05:07<01:23,  1.94s/it] 79%|███████▉  | 158/200 [05:09<01:22,  1.96s/it] 80%|███████▉  | 159/200 [05:11<01:18,  1.92s/it] 80%|████████  | 160/200 [05:13<01:18,  1.95s/it]                                                 {'loss': '1.116e-05', 'grad_norm': '0.0004223', 'learning_rate': '5.311e-06', 'entropy': '0.0001115', 'num_tokens': '3.378e+05', 'mean_token_accuracy': '1', 'epoch': '160'}
+ 80%|████████  | 160/200 [05:13<01:18,  1.95s/it]
+  0%|          | 0/2 [00:00<?, ?it/s][A                                                 
+                                     [A{'eval_loss': '3.548', 'eval_runtime': '0.1515', 'eval_samples_per_second': '13.2', 'eval_steps_per_second': '13.2', 'eval_entropy': '0.2746', 'eval_num_tokens': '3.378e+05', 'eval_mean_token_accuracy': '0.5865', 'epoch': '160'}
+ 80%|████████  | 160/200 [05:13<01:18,  1.95s/it]
+100%|██████████| 2/2 [00:00<00:00, 24.36it/s][A
+                                             [A 80%|████████  | 161/200 [05:15<01:18,  2.02s/it] 81%|████████  | 162/200 [05:17<01:14,  1.97s/it] 82%|████████▏ | 163/200 [05:19<01:13,  1.98s/it] 82%|████████▏ | 164/200 [05:21<01:09,  1.94s/it] 82%|████████▎ | 165/200 [05:23<01:08,  1.96s/it] 83%|████████▎ | 166/200 [05:25<01:07,  1.98s/it] 84%|████████▎ | 167/200 [05:27<01:03,  1.94s/it] 84%|████████▍ | 168/200 [05:29<01:02,  1.96s/it] 84%|████████▍ | 169/200 [05:31<01:01,  1.97s/it] 85%|████████▌ | 170/200 [05:33<00:58,  1.94s/it]                                                 {'loss': '1.095e-05', 'grad_norm': '0.0004191', 'learning_rate': '3.085e-06', 'entropy': '0.0001096', 'num_tokens': '3.589e+05', 'mean_token_accuracy': '1', 'epoch': '170'}
+ 85%|████████▌ | 170/200 [05:33<00:58,  1.94s/it] 86%|████████▌ | 171/200 [05:35<00:56,  1.96s/it] 86%|████████▌ | 172/200 [05:36<00:53,  1.93s/it] 86%|████████▋ | 173/200 [05:38<00:52,  1.95s/it] 87%|████████▋ | 174/200 [05:40<00:51,  1.97s/it] 88%|████████▊ | 175/200 [05:42<00:48,  1.93s/it] 88%|████████▊ | 176/200 [05:44<00:46,  1.96s/it] 88%|████████▊ | 177/200 [05:46<00:45,  1.97s/it] 89%|████████▉ | 178/200 [05:48<00:42,  1.94s/it] 90%|████████▉ | 179/200 [05:50<00:41,  1.96s/it] 90%|█████████ | 180/200 [05:52<00:38,  1.92s/it]                                                 {'loss': '1.088e-05', 'grad_norm': '0.0004092', 'learning_rate': '1.432e-06', 'entropy': '0.0001095', 'num_tokens': '3.8e+05', 'mean_token_accuracy': '1', 'epoch': '180'}
+ 90%|█████████ | 180/200 [05:52<00:38,  1.92s/it]
+  0%|          | 0/2 [00:00<?, ?it/s][A                                                 
+                                     [A{'eval_loss': '3.543', 'eval_runtime': '0.1512', 'eval_samples_per_second': '13.23', 'eval_steps_per_second': '13.23', 'eval_entropy': '0.2756', 'eval_num_tokens': '3.8e+05', 'eval_mean_token_accuracy': '0.575', 'epoch': '180'}
+ 90%|█████████ | 180/200 [05:52<00:38,  1.92s/it]
+100%|██████████| 2/2 [00:00<00:00, 24.36it/s][A
+                                             [A 90%|█████████ | 181/200 [05:54<00:37,  2.00s/it] 91%|█████████ | 182/200 [05:56<00:35,  2.00s/it] 92%|█████████▏| 183/200 [05:58<00:33,  1.96s/it] 92%|█████████▏| 184/200 [06:00<00:31,  1.97s/it] 92%|█████████▎| 185/200 [06:02<00:29,  1.94s/it] 93%|█████████▎| 186/200 [06:04<00:27,  1.96s/it] 94%|█████████▎| 187/200 [06:06<00:25,  1.97s/it] 94%|█████████▍| 188/200 [06:08<00:23,  1.94s/it] 94%|█████████▍| 189/200 [06:10<00:21,  1.96s/it] 95%|█████████▌| 190/200 [06:12<00:19,  1.93s/it]                                                 {'loss': '1.087e-05', 'grad_norm': '0.0004112', 'learning_rate': '3.956e-07', 'entropy': '0.0001091', 'num_tokens': '4.011e+05', 'mean_token_accuracy': '1', 'epoch': '190'}
+ 95%|█████████▌| 190/200 [06:12<00:19,  1.93s/it] 96%|█████████▌| 191/200 [06:14<00:17,  1.95s/it] 96%|█████████▌| 192/200 [06:16<00:15,  1.97s/it] 96%|█████████▋| 193/200 [06:18<00:13,  1.93s/it] 97%|█████████▋| 194/200 [06:20<00:11,  1.95s/it] 98%|█████████▊| 195/200 [06:22<00:09,  1.97s/it] 98%|█████████▊| 196/200 [06:23<00:07,  1.93s/it] 98%|█████████▊| 197/200 [06:25<00:05,  1.96s/it] 99%|█████████▉| 198/200 [06:27<00:03,  1.92s/it]100%|█████████▉| 199/200 [06:29<00:01,  1.95s/it]100%|██████████| 200/200 [06:31<00:00,  1.97s/it]                                                 {'loss': '1.083e-05', 'grad_norm': '0.0004111', 'learning_rate': '3.278e-09', 'entropy': '0.0001087', 'num_tokens': '4.222e+05', 'mean_token_accuracy': '1', 'epoch': '200'}
+100%|██████████| 200/200 [06:31<00:00,  1.97s/it]
+  0%|          | 0/2 [00:00<?, ?it/s][A                                                 
+                                     [A{'eval_loss': '3.528', 'eval_runtime': '0.1519', 'eval_samples_per_second': '13.16', 'eval_steps_per_second': '13.16', 'eval_entropy': '0.2761', 'eval_num_tokens': '4.222e+05', 'eval_mean_token_accuracy': '0.5883', 'epoch': '200'}
+100%|██████████| 200/200 [06:31<00:00,  1.97s/it]
+100%|██████████| 2/2 [00:00<00:00, 24.37it/s][A
+                                             [A                                                 {'train_runtime': '391.9', 'train_samples_per_second': '3.062', 'train_steps_per_second': '0.51', 'train_loss': '0.2611', 'epoch': '200'}
+100%|██████████| 200/200 [06:31<00:00,  1.97s/it]100%|██████████| 200/200 [06:31<00:00,  1.96s/it]
+Loading weights:   0%|          | 0/2076 [00:00<?, ?it/s]Loading weights:  60%|█████▉    | 1236/2076 [00:00<00:00, 12350.71it/s]Loading weights: 100%|██████████| 2076/2076 [00:00<00:00, 12388.72it/s]
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:10<00:00, 10.69s/it]Writing model shards: 100%|██████████| 1/1 [00:10<00:00, 10.69s/it]
+Fetching 1 files:   0%|          | 0/1 [00:00<?, ?it/s]Fetching 1 files: 100%|██████████| 1/1 [00:00<00:00, 20867.18it/s]
+[info] Restored 18 KV-shared k_norm weights into model.safetensors
+{
+  "seed": 42,
+  "model": "google/gemma-4-E4B-it",
+  "data_path": "data/logickor_sft_high_converted.jsonl",
+  "dataset_stats": {
+    "row_count": 684,
+    "turn_counts": {
+      "1": 342,
+      "2": 342
+    },
+    "question_id_count": 342
+  },
+  "split_stats": {
+    "train_question_ids": 307,
+    "eval_question_ids": 35,
+    "train_rows": 614,
+    "eval_rows": 70,
+    "train_fraction": 0.01,
+    "subsampled_train_rows": 6,
+    "subsampled_eval_rows": 2
+  },
+  "train_fraction": 0.01,
+  "train_args": {
+    "output_dir": "runs/gemma4_e4b_sft_high",
+    "num_train_epochs": 200,
+    "per_device_train_batch_size": 1,
+    "per_device_eval_batch_size": 1,
+    "gradient_accumulation_steps": 16,
+    "gradient_checkpointing": true,
+    "learning_rate": 5e-05,
+    "lr_scheduler_type": "cosine",
+    "optim": "adamw_torch",
+    "weight_decay": 0.0,
+    "logging_steps": 10,
+    "eval_steps": 20,
+    "eval_strategy": "steps",
+    "evaluation_strategy": "steps",
+    "save_strategy": "no",
+    "load_best_model_at_end": false,
+    "metric_for_best_model": "eval_loss",
+    "greater_is_better": false,
+    "bf16": true,
+    "fp16": false,
+    "seed": 42,
+    "max_length": 2048,
+    "max_seq_length": 2048,
+    "assistant_only_loss": true,
+    "completion_only_loss": false,
+    "dataset_kwargs": {
+      "skip_prepare_dataset": false
+    },
+    "report_to": "none",
+    "warmup_ratio": 0.03
+  },
+  "save_checkpoints": false,
+  "best_checkpoint_only": false,
+  "early_stopping_enabled": false,
+  "best_model_checkpoint": null,
+  "best_eval_loss": 2.235685110092163,
+  "global_step": 200,
+  "adapter_dir": "runs/gemma4_e4b_sft_high/adapter",
+  "merged_dir": "runs/gemma4_e4b_sft_high/merged"
+}
+
+==============================================================
+[2026-08-14 13:57:48] Step 2/4: generating LogicKor answers with runs/gemma4_e4b_sft_high/merged
+==============================================================
+- Using vLLM
+Args - Namespace(gpu_devices='0', model='runs/gemma4_e4b_sft_high/merged', model_len=4096)
+INFO 08-14 13:57:52 [utils.py:233] non-default args: {'trust_remote_code': True, 'max_model_len': 4096, 'gpu_memory_utilization': 0.8, 'disable_log_stats': True, 'enforce_eager': True, 'compilation_config': {'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': [], 'splitting_ops': None, 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_images_per_batch': 0, 'compile_sizes': None, 'compile_ranges_endpoints': None, 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': None, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': None, 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': None, 'pass_config': {}, 'max_cudagraph_capture_size': None, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': None, 'static_all_moe_layers': []}, 'attention_config': AttentionConfig(backend=<AttentionBackendEnum.TRITON_ATTN: 'vllm.v1.attention.backends.triton_attn.TritonAttentionBackend'>, flash_attn_version=None, use_prefill_decode_attention=False, flash_attn_max_num_splits_for_cuda_graph=32, use_cudnn_prefill=False, use_trtllm_ragged_deepseek_prefill=False, use_trtllm_attention=None, disable_flashinfer_prefill=True, disable_flashinfer_q_quantization=False, use_prefill_query_quantization=False), 'model': 'runs/gemma4_e4b_sft_high/merged'}
+WARNING 08-14 13:57:52 [envs.py:1744] Unknown vLLM environment variable detected: VLLM_USE_V1
+WARNING 08-14 13:57:52 [envs.py:1744] Unknown vLLM environment variable detected: VLLM_ATTENTION_BACKEND
+INFO 08-14 13:57:52 [model.py:549] Resolved architecture: Gemma4ForConditionalGeneration
+INFO 08-14 13:57:52 [model.py:1678] Using max model len 4096
+INFO 08-14 13:57:52 [scheduler.py:238] Chunked prefill is enabled with max_num_batched_tokens=8192.
+INFO 08-14 13:57:52 [vllm.py:790] Asynchronous scheduling is enabled.
+WARNING 08-14 13:57:52 [vllm.py:848] Enforce eager set, disabling torch.compile and CUDAGraphs. This is equivalent to setting -cc.mode=none -cc.cudagraph_mode=none
+WARNING 08-14 13:57:52 [vllm.py:859] Inductor compilation was disabled by user settings, optimizations settings that are only active during inductor compilation will be ignored.
+INFO 08-14 13:57:52 [vllm.py:1025] Cudagraph is disabled under eager mode
+INFO 08-14 13:57:52 [compilation.py:292] Enabled custom fusions: norm_quant, act_quant
+(EngineCore pid=734635) INFO 08-14 13:58:14 [core.py:105] Initializing a V1 LLM engine (v0.19.1) with config: model='runs/gemma4_e4b_sft_high/merged', speculative_config=None, tokenizer='runs/gemma4_e4b_sft_high/merged', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.bfloat16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, enforce_eager=True, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False), seed=0, served_model_name=runs/gemma4_e4b_sft_high/merged, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'splitting_ops': [], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_images_per_batch': 0, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False}, 'max_cudagraph_capture_size': 0, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': True, 'static_all_moe_layers': []}
+(EngineCore pid=734635) INFO 08-14 13:58:15 [parallel_state.py:1400] world_size=1 rank=0 local_rank=0 distributed_init_method=tcp://129.254.222.147:59065 backend=nccl
+(EngineCore pid=734635) INFO 08-14 13:58:15 [parallel_state.py:1716] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=734635) INFO 08-14 13:58:16 [gpu_model_runner.py:4735] Starting to load model runs/gemma4_e4b_sft_high/merged...
+(EngineCore pid=734635) WARNING 08-14 13:58:17 [vllm.py:848] Enforce eager set, disabling torch.compile and CUDAGraphs. This is equivalent to setting -cc.mode=none -cc.cudagraph_mode=none
+(EngineCore pid=734635) WARNING 08-14 13:58:17 [vllm.py:859] Inductor compilation was disabled by user settings, optimizations settings that are only active during inductor compilation will be ignored.
+(EngineCore pid=734635) INFO 08-14 13:58:17 [vllm.py:1025] Cudagraph is disabled under eager mode
+(EngineCore pid=734635) INFO 08-14 13:58:17 [cuda.py:274] Using AttentionBackendEnum.TRITON_ATTN backend.
+(EngineCore pid=734635) INFO 08-14 13:58:17 [cuda.py:274] Using AttentionBackendEnum.TRITON_ATTN backend.
+(EngineCore pid=734635) <frozen importlib._bootstrap_external>:1241: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(EngineCore pid=734635) <frozen importlib._bootstrap_external>:1241: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(EngineCore pid=734635) Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+(EngineCore pid=734635) Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.67s/it]
+(EngineCore pid=734635) Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.67s/it]
+(EngineCore pid=734635) 
+(EngineCore pid=734635) INFO 08-14 13:58:19 [default_loader.py:384] Loading weights took 1.76 seconds
+(EngineCore pid=734635) INFO 08-14 13:58:19 [gpu_model_runner.py:4820] Model loading took 15.28 GiB memory and 2.223975 seconds
+(EngineCore pid=734635) INFO 08-14 13:58:19 [gpu_model_runner.py:5753] Encoder cache will be initialized with a budget of 8192 tokens, and profiled with 3 video items of the maximum feature size.
+(EngineCore pid=734635) INFO 08-14 13:58:23 [gpu_worker.py:436] Available KV cache memory: 46.73 GiB
+(EngineCore pid=734635) INFO 08-14 13:58:23 [kv_cache_utils.py:1319] GPU KV cache size: 510,384 tokens
+(EngineCore pid=734635) INFO 08-14 13:58:23 [kv_cache_utils.py:1324] Maximum concurrency for 4,096 tokens per request: 212.43x
+(EngineCore pid=734635) INFO 08-14 13:58:23 [core.py:283] init engine (profile, create kv cache, warmup model) took 3.44 seconds
+(EngineCore pid=734635) WARNING 08-14 13:58:23 [vllm.py:848] Enforce eager set, disabling torch.compile and CUDAGraphs. This is equivalent to setting -cc.mode=none -cc.cudagraph_mode=none
+(EngineCore pid=734635) WARNING 08-14 13:58:23 [vllm.py:859] Inductor compilation was disabled by user settings, optimizations settings that are only active during inductor compilation will be ignored.
+(EngineCore pid=734635) INFO 08-14 13:58:23 [vllm.py:1025] Cudagraph is disabled under eager mode
+<bos><|turn>system
+문제를 해결하는 과정을 단계별로 명확하게 설명한 다음, 최종 답변을 제시해 주세요.<turn|>
+<|turn>user
+한 도시에서 매년 나무를 심고 있습니다. 첫해에 100그루를 심었고, 매년 전년도에 심은 나무의 수보다 20%씩 더 많은 나무를 심고 있습니다. 2년 후에는 총 몇 그루의 나무를 심게 될까요?<turn|>
+<|turn>model
+이 문제를 해결하기 위해 단계별로 접근해 보겠습니다.
+
+1단계: 주어진 정보 정리
+- 첫해에 100그루를 심음
+- 매년 전년도보다 20% 더 많은 나무를 심음
+- 2년 후의 총 나무 수를 구해야 함
+
+2단계: 두 번째 해에 심은 나무 수 계산
+- 첫해보다 20% 증가
+- 100 + (100의 20%) = 100 + 20 = 120그루
+
+3단계: 세 번째 해에 심은 나무 수 계산
+- 두 번째 해보다 20% 증가
+- 120 + (120의 20%) = 120 + 24 = 144그루
+
+4단계: 3년 동안 심은 총 나무 수 계산
+- 첫해: 100그루
+- 둘째 해: 120그루
+- 셋째 해: 144그루
+- 총합: 100 + 120 + 144 = 364그루
+
+따라서, 2년 후(즉, 3년째)에는 총 364그루의 나무를 심게 됩니다.<turn|>
+<|turn>user
+각국의 법률에서는 정의라는 개념이 자주 등장하며, 법령의 형성과 해석에 있어 매우 중요한 부분을 차지한다. 하지만 정의란 명확히 규정할 수 없는 개념이기에 해석의 논란이 있을 수 있다. 그렇다면 사회구성원의 대다수가 납득할 수 있는 보편적 정의를 입증하는 방법은 무엇일지 생각해보아라.<turn|>
+<|turn>model
+
+Rendering prompts:   0%|          | 0/42 [00:00<?, ?it/s]Rendering prompts: 100%|██████████| 42/42 [00:00<00:00, 1896.32it/s]
+Processed prompts:   0%|          | 0/42 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]Processed prompts:   2%|▏         | 1/42 [00:01<01:06,  1.62s/it, est. speed input: 263.45 toks/s, output: 39.49 toks/s]Processed prompts:   5%|▍         | 2/42 [00:02<00:49,  1.23s/it, est. speed input: 616.90 toks/s, output: 67.94 toks/s]Processed prompts:   7%|▋         | 3/42 [00:04<00:58,  1.50s/it, est. speed input: 456.13 toks/s, output: 85.32 toks/s]Processed prompts:  10%|▉         | 4/42 [00:05<00:49,  1.31s/it, est. speed input: 455.57 toks/s, output: 115.78 toks/s]Processed prompts:  12%|█▏        | 5/42 [00:05<00:36,  1.01it/s, est. speed input: 500.94 toks/s, output: 153.87 toks/s]Processed prompts:  14%|█▍        | 6/42 [00:08<00:52,  1.45s/it, est. speed input: 409.58 toks/s, output: 157.35 toks/s]Processed prompts:  17%|█▋        | 7/42 [00:08<00:36,  1.05s/it, est. speed input: 447.79 toks/s, output: 200.21 toks/s]Processed prompts:  19%|█▉        | 8/42 [00:09<00:36,  1.08s/it, est. speed input: 449.56 toks/s, output: 224.05 toks/s]Processed prompts:  21%|██▏       | 9/42 [00:09<00:27,  1.21it/s, est. speed input: 479.34 toks/s, output: 265.34 toks/s]Processed prompts:  24%|██▍       | 10/42 [00:10<00:21,  1.51it/s, est. speed input: 510.63 toks/s, output: 305.60 toks/s]Processed prompts:  26%|██▌       | 11/42 [00:10<00:16,  1.85it/s, est. speed input: 536.92 toks/s, output: 345.46 toks/s]Processed prompts:  31%|███       | 13/42 [00:10<00:10,  2.79it/s, est. speed input: 608.48 toks/s, output: 430.19 toks/s]Processed prompts: 100%|██████████| 42/42 [00:10<00:00,  2.79it/s, est. speed input: 2018.13 toks/s, output: 1818.91 toks/s]Processed prompts: 100%|██████████| 42/42 [00:10<00:00,  3.93it/s, est. speed input: 2018.13 toks/s, output: 1818.91 toks/s]
+Rendering prompts:   0%|          | 0/42 [00:00<?, ?it/s]Rendering prompts: 100%|██████████| 42/42 [00:00<00:00, 1370.45it/s]
+Processed prompts:   0%|          | 0/42 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]Processed prompts:   2%|▏         | 1/42 [00:01<00:42,  1.04s/it, est. speed input: 492.74 toks/s, output: 44.35 toks/s]Processed prompts:   5%|▍         | 2/42 [00:04<01:33,  2.35s/it, est. speed input: 353.55 toks/s, output: 58.61 toks/s]Processed prompts:   7%|▋         | 3/42 [00:06<01:25,  2.20s/it, est. speed input: 389.09 toks/s, output: 88.21 toks/s]Processed prompts:  10%|▉         | 4/42 [00:07<01:07,  1.77s/it, est. speed input: 463.08 toks/s, output: 123.55 toks/s]Processed prompts:  12%|█▏        | 5/42 [00:08<00:57,  1.55s/it, est. speed input: 509.41 toks/s, output: 155.31 toks/s]Processed prompts:  14%|█▍        | 6/42 [00:08<00:38,  1.08s/it, est. speed input: 604.38 toks/s, output: 200.66 toks/s]Processed prompts:  17%|█▋        | 7/42 [00:09<00:31,  1.10it/s, est. speed input: 669.70 toks/s, output: 237.18 toks/s]Processed prompts:  19%|█▉        | 8/42 [00:10<00:34,  1.00s/it, est. speed input: 674.22 toks/s, output: 258.32 toks/s]Processed prompts: 100%|██████████| 42/42 [00:10<00:00,  1.00s/it, est. speed input: 3947.28 toks/s, output: 1907.97 toks/s]Processed prompts: 100%|██████████| 42/42 [00:10<00:00,  3.98it/s, est. speed input: 3947.28 toks/s, output: 1907.97 toks/s]
+<bos><|turn>user
+Git의 rebase와 merge의 차이점을 설명하고, 각각 어떤 상황에서 사용하는 것이 좋은지 예를 들어 설명해주세요.<turn|>
+<|turn>model
+Git에서 `rebase`와 `merge`는 두 개의 브랜치를 통합하는 데 사용되는 두 가지 주요 명령어입니다. 이들의 차이점과 사용 상황을 설명하겠습니다.
+
+### Rebase
+
+#### 개념
+- `rebase`는 하나의 브랜치의 커밋을 다른 브랜치의 끝에 다시 적용하는 것입니다. 즉, 커밋 히스토리를 새로 만든다고 할 수 있습니다.
+- 결과적으로 커밋 히스토리가 깔끔하게 정리됩니다.
+
+#### 사용 상황
+- **깔끔한 히스토리가 필요할 때**: 브랜치 히스토리가 병합 없이 일직선으로 이어지도록 하고 싶을 때 유용합니다.
+- **작업 중인 브랜치를 최신 상태로 유지하고 싶을 때**: 예를 들어, `feature` 브랜치에서 작업 중인데 `main` 브랜치에서 업데이트가 있을 경우, `feature` 브랜치를 `rebase`하여 최신 상태로 유지할 수 있습니다.
+
+#### 예제
+1. `feature` 브랜치에서 작업 중입니다.
+2. `main` 브랜치에 새로운 커밋이 추가되었습니다.
+3. `feature` 브랜치에서 `git rebase main`을 실행합니다.
+4. `feature` 브랜치의 커밋들이 `main` 브랜치의 최신 커밋들 뒤에 재배치됩니다.
+
+```bash
+git checkout feature
+git rebase main
+```
+
+### Merge
+
+#### 개념
+- `merge`는 두 개의 브랜치를 합치는 방법으로, 두 브랜치의 히스토리를 유지하며 새로운 병합 커밋을 생성합니다.
+- `merge`는 기존의 히스토리를 그대로 보존합니다.
+
+#### 사용 상황
+- **히스토리를 유지하고 싶을 때**: 각 브랜치의 작업 기록을 그대로 보존하면서 병합할 때 사용합니다.
+- **협업 중 충돌을 명확히 해결하고 기록을 남기고 싶을 때**: 여러 사람이 같은 저장소에서 작업할 때, `merge`는 충돌 해결 과정과 그 기록을 명확히 남길 수 있습니다.
+
+#### 예제
+1. `feature` 브랜치에서 작업을 완료했습니다.
+2. `main` 브랜치에 병합하고 싶습니다.
+3. `main` 브랜치로 체크아웃한 후 `feature` 브랜치를 병합합니다.
+
+```bash
+git checkout main
+git merge feature
+```
+
+### 요약
+
+- **Rebase**는 히스토리를 깔끔하게 정리하는 데 유리하며, 주로 개인 작업이나 `feature` 브랜치를 최신 상태로 유지할 때 사용됩니다.
+- **Merge**는 두 브랜치의 작업 히스토리를 보존하면서 병합하며, 협업 과정에서 충돌 해결과 기록을 명확히 남기는 데 유리합니다.
+
+각 방법의 장단점과 사용 상황을 고려하여 적절히 선택하는 것이 중요합니다.<turn|>
+<|turn>user
+각국의 법률에서는 정의라는 개념이 자주 등장하며, 법령의 형성과 해석에 있어 매우 중요한 부분을 차지한다. 하지만 정의란 명확히 규정할 수 없는 개념이기에 해석의 논란이 있을 수 있다. 그렇다면 사회구성원의 대다수가 납득할 수 있는 보편적 정의를 입증하는 방법은 무엇일지 생각해보아라.<turn|>
+<|turn>model
+
+Rendering prompts:   0%|          | 0/42 [00:00<?, ?it/s]Rendering prompts: 100%|██████████| 42/42 [00:00<00:00, 1614.82it/s]
+Processed prompts:   0%|          | 0/42 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]Processed prompts:   2%|▏         | 1/42 [00:01<00:57,  1.41s/it, est. speed input: 528.17 toks/s, output: 39.70 toks/s]Processed prompts:   5%|▍         | 2/42 [00:02<00:54,  1.37s/it, est. speed input: 796.16 toks/s, output: 64.32 toks/s]Processed prompts:   7%|▋         | 3/42 [00:03<00:48,  1.26s/it, est. speed input: 757.69 toks/s, output: 91.16 toks/s]Processed prompts:  12%|█▏        | 5/42 [00:04<00:24,  1.52it/s, est. speed input: 1015.25 toks/s, output: 169.91 toks/s]Processed prompts:  14%|█▍        | 6/42 [00:04<00:22,  1.62it/s, est. speed input: 1053.19 toks/s, output: 197.82 toks/s]Processed prompts:  17%|█▋        | 7/42 [00:05<00:23,  1.50it/s, est. speed input: 1032.62 toks/s, output: 216.46 toks/s]Processed prompts:  21%|██▏       | 9/42 [00:06<00:21,  1.56it/s, est. speed input: 1073.69 toks/s, output: 262.58 toks/s]Processed prompts:  24%|██▍       | 10/42 [00:07<00:17,  1.79it/s, est. speed input: 1125.22 toks/s, output: 298.29 toks/s]Processed prompts:  26%|██▌       | 11/42 [00:07<00:17,  1.78it/s, est. speed input: 1136.88 toks/s, output: 323.59 toks/s]Processed prompts:  29%|██▊       | 12/42 [00:08<00:17,  1.73it/s, est. speed input: 1210.98 toks/s, output: 346.80 toks/s]Processed prompts:  33%|███▎      | 14/42 [00:08<00:10,  2.56it/s, est. speed input: 1335.67 toks/s, output: 428.33 toks/s]Processed prompts:  36%|███▌      | 15/42 [00:09<00:11,  2.28it/s, est. speed input: 1392.91 toks/s, output: 448.26 toks/s]Processed prompts:  38%|███▊      | 16/42 [00:09<00:12,  2.07it/s, est. speed input: 1377.03 toks/s, output: 467.92 toks/s]Processed prompts:  40%|████      | 17/42 [00:10<00:14,  1.73it/s, est. speed input: 1339.50 toks/s, output: 479.05 toks/s]Processed prompts: 100%|██████████| 42/42 [00:10<00:00,  1.73it/s, est. speed input: 3148.56 toks/s, output: 1681.83 toks/s]Processed prompts: 100%|██████████| 42/42 [00:10<00:00,  3.95it/s, est. speed input: 3148.56 toks/s, output: 1681.83 toks/s]
+Rendering prompts:   0%|          | 0/42 [00:00<?, ?it/s]Rendering prompts: 100%|██████████| 42/42 [00:00<00:00, 1080.87it/s]
+Processed prompts:   0%|          | 0/42 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]Processed prompts:   2%|▏         | 1/42 [00:02<01:42,  2.49s/it, est. speed input: 397.64 toks/s, output: 45.79 toks/s]Processed prompts:   5%|▍         | 2/42 [00:03<01:05,  1.63s/it, est. speed input: 592.34 toks/s, output: 79.43 toks/s]Processed prompts:   7%|▋         | 3/42 [00:03<00:41,  1.05s/it, est. speed input: 835.12 toks/s, output: 119.01 toks/s]Processed prompts:  10%|▉         | 4/42 [00:05<00:55,  1.46s/it, est. speed input: 731.76 toks/s, output: 125.28 toks/s]Processed prompts:  12%|█▏        | 5/42 [00:06<00:46,  1.25s/it, est. speed input: 818.57 toks/s, output: 157.21 toks/s]Processed prompts:  14%|█▍        | 6/42 [00:07<00:35,  1.02it/s, est. speed input: 946.34 toks/s, output: 195.61 toks/s]Processed prompts:  17%|█▋        | 7/42 [00:07<00:29,  1.20it/s, est. speed input: 1032.72 toks/s, output: 230.81 toks/s]Processed prompts:  19%|█▉        | 8/42 [00:08<00:23,  1.45it/s, est. speed input: 1113.69 toks/s, output: 268.42 toks/s]Processed prompts:  21%|██▏       | 9/42 [00:08<00:16,  1.95it/s, est. speed input: 1260.90 toks/s, output: 313.07 toks/s]Processed prompts:  26%|██▌       | 11/42 [00:09<00:13,  2.24it/s, est. speed input: 1398.63 toks/s, output: 380.60 toks/s]Processed prompts:  29%|██▊       | 12/42 [00:09<00:13,  2.22it/s, est. speed input: 1464.15 toks/s, output: 410.88 toks/s]Processed prompts:  31%|███       | 13/42 [00:10<00:16,  1.73it/s, est. speed input: 1414.95 toks/s, output: 423.31 toks/s]Processed prompts: 100%|██████████| 42/42 [00:10<00:00,  1.73it/s, est. speed input: 4961.68 toks/s, output: 1838.63 toks/s]Processed prompts: 100%|██████████| 42/42 [00:10<00:00,  4.00it/s, est. speed input: 4961.68 toks/s, output: 1838.63 toks/s]
+<bos><|turn>user
+각국의 법률에서는 정의라는 개념이 자주 등장하며, 법령의 형성과 해석에 있어 매우 중요한 부분을 차지한다. 하지만 정의란 명확히 규정할 수 없는 개념이기에 해석의 논란이 있을 수 있다. 그렇다면 사회구성원의 대다수가 납득할 수 있는 보편적 정의를 입증하는 방법은 무엇일지 생각해보아라.<turn|>
+<|turn>model
+
+Rendering prompts:   0%|          | 0/42 [00:00<?, ?it/s]Rendering prompts: 100%|██████████| 42/42 [00:00<00:00, 4957.67it/s]
+Processed prompts:   0%|          | 0/42 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]Processed prompts:   2%|▏         | 1/42 [00:00<00:33,  1.23it/s, est. speed input: 44.35 toks/s, output: 34.49 toks/s]Processed prompts:   5%|▍         | 2/42 [00:01<00:28,  1.38it/s, est. speed input: 76.12 toks/s, output: 60.49 toks/s]Processed prompts:   7%|▋         | 3/42 [00:01<00:20,  1.89it/s, est. speed input: 86.88 toks/s, output: 93.09 toks/s]Processed prompts:  10%|▉         | 4/42 [00:02<00:19,  1.96it/s, est. speed input: 413.34 toks/s, output: 117.65 toks/s]Processed prompts:  12%|█▏        | 5/42 [00:02<00:19,  1.87it/s, est. speed input: 340.93 toks/s, output: 139.05 toks/s]Processed prompts:  14%|█▍        | 6/42 [00:02<00:14,  2.54it/s, est. speed input: 339.25 toks/s, output: 179.10 toks/s]Processed prompts:  17%|█▋        | 7/42 [00:04<00:27,  1.28it/s, est. speed input: 229.05 toks/s, output: 164.04 toks/s]Processed prompts:  19%|█▉        | 8/42 [00:05<00:25,  1.31it/s, est. speed input: 223.93 toks/s, output: 188.71 toks/s]Processed prompts:  24%|██▍       | 10/42 [00:06<00:20,  1.55it/s, est. speed input: 207.62 toks/s, output: 245.36 toks/s]Processed prompts:  29%|██▊       | 12/42 [00:07<00:18,  1.60it/s, est. speed input: 186.76 toks/s, output: 294.67 toks/s]Processed prompts:  31%|███       | 13/42 [00:07<00:14,  1.96it/s, est. speed input: 192.61 toks/s, output: 338.05 toks/s]Processed prompts:  33%|███▎      | 14/42 [00:07<00:11,  2.34it/s, est. speed input: 272.69 toks/s, output: 379.10 toks/s]Processed prompts:  38%|███▊      | 16/42 [00:08<00:12,  2.01it/s, est. speed input: 316.23 toks/s, output: 418.28 toks/s]Processed prompts:  40%|████      | 17/42 [00:09<00:13,  1.88it/s, est. speed input: 297.50 toks/s, output: 438.70 toks/s]Processed prompts:  43%|████▎     | 18/42 [00:10<00:14,  1.63it/s, est. speed input: 281.48 toks/s, output: 451.30 toks/s]Processed prompts: 100%|██████████| 42/42 [00:10<00:00,  1.63it/s, est. speed input: 516.38 toks/s, output: 1624.79 toks/s]Processed prompts: 100%|██████████| 42/42 [00:10<00:00,  4.01it/s, est. speed input: 516.38 toks/s, output: 1624.79 toks/s]
+Rendering prompts:   0%|          | 0/42 [00:00<?, ?it/s]Rendering prompts: 100%|██████████| 42/42 [00:00<00:00, 2073.24it/s]
+Processed prompts:   0%|          | 0/42 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]Processed prompts:   2%|▏         | 1/42 [00:01<00:55,  1.35s/it, est. speed input: 101.92 toks/s, output: 45.05 toks/s]Processed prompts:   5%|▍         | 2/42 [00:01<00:30,  1.31it/s, est. speed input: 306.51 toks/s, output: 81.46 toks/s]Processed prompts:   7%|▋         | 3/42 [00:03<00:47,  1.23s/it, est. speed input: 269.71 toks/s, output: 86.84 toks/s]Processed prompts:  10%|▉         | 4/42 [00:05<00:58,  1.55s/it, est. speed input: 245.17 toks/s, output: 102.33 toks/s]Processed prompts:  12%|█▏        | 5/42 [00:05<00:41,  1.11s/it, est. speed input: 332.19 toks/s, output: 144.34 toks/s]Processed prompts:  14%|█▍        | 6/42 [00:06<00:28,  1.27it/s, est. speed input: 409.15 toks/s, output: 188.06 toks/s]Processed prompts:  17%|█▋        | 7/42 [00:06<00:23,  1.47it/s, est. speed input: 395.84 toks/s, output: 222.62 toks/s]Processed prompts:  21%|██▏       | 9/42 [00:07<00:19,  1.71it/s, est. speed input: 500.14 toks/s, output: 283.53 toks/s]Processed prompts:  24%|██▍       | 10/42 [00:07<00:18,  1.77it/s, est. speed input: 558.29 toks/s, output: 313.48 toks/s]Processed prompts:  26%|██▌       | 11/42 [00:09<00:21,  1.41it/s, est. speed input: 510.96 toks/s, output: 323.34 toks/s]Processed prompts:  29%|██▊       | 12/42 [00:10<00:25,  1.18it/s, est. speed input: 511.10 toks/s, output: 333.30 toks/s]Processed prompts:  31%|███       | 13/42 [00:10<00:20,  1.45it/s, est. speed input: 514.51 toks/s, output: 372.90 toks/s]Processed prompts: 100%|██████████| 42/42 [00:10<00:00,  1.45it/s, est. speed input: 2179.50 toks/s, output: 1779.00 toks/s]Processed prompts: 100%|██████████| 42/42 [00:10<00:00,  3.98it/s, est. speed input: 2179.50 toks/s, output: 1779.00 toks/s]
+(EngineCore pid=734635) INFO 08-14 13:59:27 [core.py:1210] Shutdown initiated (timeout=0)
+(EngineCore pid=734635) INFO 08-14 13:59:27 [core.py:1233] Shutdown complete
+ERROR 08-14 13:59:27 [core_client.py:667] Engine core proc EngineCore died unexpectedly, shutting down client.
+
+==============================================================
+[2026-08-14 13:59:29] Step 3/4: judging with 'gemma' -> evaluated/
+==============================================================
+- Judge model: google/gemma-4-E4B-it
+- Using vLLM
+INFO 08-14 13:59:32 [utils.py:233] non-default args: {'trust_remote_code': True, 'max_model_len': 8192, 'gpu_memory_utilization': 0.8, 'disable_log_stats': True, 'enforce_eager': True, 'model': 'google/gemma-4-E4B-it'}
+WARNING 08-14 13:59:32 [envs.py:1744] Unknown vLLM environment variable detected: VLLM_USE_V1
+WARNING 08-14 13:59:32 [envs.py:1744] Unknown vLLM environment variable detected: VLLM_ATTENTION_BACKEND
+INFO 08-14 13:59:34 [model.py:549] Resolved architecture: Gemma4ForConditionalGeneration
+INFO 08-14 13:59:34 [model.py:1678] Using max model len 8192
+INFO 08-14 13:59:34 [scheduler.py:238] Chunked prefill is enabled with max_num_batched_tokens=8192.
+INFO 08-14 13:59:34 [config.py:104] Gemma4 model has heterogeneous head dimensions (head_dim=256, global_head_dim=512). Forcing TRITON_ATTN backend to prevent mixed-backend numerical divergence.
+INFO 08-14 13:59:34 [vllm.py:790] Asynchronous scheduling is enabled.
+WARNING 08-14 13:59:34 [vllm.py:848] Enforce eager set, disabling torch.compile and CUDAGraphs. This is equivalent to setting -cc.mode=none -cc.cudagraph_mode=none
+WARNING 08-14 13:59:34 [vllm.py:859] Inductor compilation was disabled by user settings, optimizations settings that are only active during inductor compilation will be ignored.
+INFO 08-14 13:59:35 [vllm.py:1025] Cudagraph is disabled under eager mode
+INFO 08-14 13:59:35 [compilation.py:292] Enabled custom fusions: norm_quant, act_quant
+(EngineCore pid=736354) INFO 08-14 14:00:13 [core.py:105] Initializing a V1 LLM engine (v0.19.1) with config: model='google/gemma-4-E4B-it', speculative_config=None, tokenizer='google/gemma-4-E4B-it', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.bfloat16, max_seq_len=8192, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, enforce_eager=True, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False), seed=0, served_model_name=google/gemma-4-E4B-it, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'splitting_ops': [], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_images_per_batch': 0, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False}, 'max_cudagraph_capture_size': 0, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': True, 'static_all_moe_layers': []}
+(EngineCore pid=736354) INFO 08-14 14:00:15 [parallel_state.py:1400] world_size=1 rank=0 local_rank=0 distributed_init_method=tcp://129.254.222.147:51787 backend=nccl
+(EngineCore pid=736354) INFO 08-14 14:00:15 [parallel_state.py:1716] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=736354) INFO 08-14 14:00:16 [gpu_model_runner.py:4735] Starting to load model google/gemma-4-E4B-it...
+(EngineCore pid=736354) WARNING 08-14 14:00:17 [vllm.py:848] Enforce eager set, disabling torch.compile and CUDAGraphs. This is equivalent to setting -cc.mode=none -cc.cudagraph_mode=none
+(EngineCore pid=736354) WARNING 08-14 14:00:17 [vllm.py:859] Inductor compilation was disabled by user settings, optimizations settings that are only active during inductor compilation will be ignored.
+(EngineCore pid=736354) INFO 08-14 14:00:17 [vllm.py:1025] Cudagraph is disabled under eager mode
+(EngineCore pid=736354) INFO 08-14 14:00:17 [cuda.py:274] Using AttentionBackendEnum.TRITON_ATTN backend.
+(EngineCore pid=736354) INFO 08-14 14:00:17 [cuda.py:274] Using AttentionBackendEnum.TRITON_ATTN backend.
+(EngineCore pid=736354) <frozen importlib._bootstrap_external>:1241: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(EngineCore pid=736354) <frozen importlib._bootstrap_external>:1241: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(EngineCore pid=736354) INFO 08-14 14:00:18 [weight_utils.py:625] No model.safetensors.index.json found in remote.
+(EngineCore pid=736354) Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+(EngineCore pid=736354) Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.83s/it]
+(EngineCore pid=736354) Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.84s/it]
+(EngineCore pid=736354) 
+(EngineCore pid=736354) INFO 08-14 14:00:20 [default_loader.py:384] Loading weights took 1.84 seconds
+(EngineCore pid=736354) INFO 08-14 14:00:20 [gpu_model_runner.py:4820] Model loading took 15.28 GiB memory and 3.205792 seconds
+(EngineCore pid=736354) INFO 08-14 14:00:20 [gpu_model_runner.py:5753] Encoder cache will be initialized with a budget of 8192 tokens, and profiled with 3 video items of the maximum feature size.
+(EngineCore pid=736354) INFO 08-14 14:00:24 [gpu_worker.py:436] Available KV cache memory: 46.73 GiB
+(EngineCore pid=736354) INFO 08-14 14:00:24 [kv_cache_utils.py:1319] GPU KV cache size: 510,384 tokens
+(EngineCore pid=736354) INFO 08-14 14:00:24 [kv_cache_utils.py:1324] Maximum concurrency for 8,192 tokens per request: 106.51x
+(EngineCore pid=736354) INFO 08-14 14:00:24 [core.py:283] init engine (profile, create kv cache, warmup model) took 3.50 seconds
+(EngineCore pid=736354) WARNING 08-14 14:00:24 [vllm.py:848] Enforce eager set, disabling torch.compile and CUDAGraphs. This is equivalent to setting -cc.mode=none -cc.cudagraph_mode=none
+(EngineCore pid=736354) WARNING 08-14 14:00:24 [vllm.py:859] Inductor compilation was disabled by user settings, optimizations settings that are only active during inductor compilation will be ignored.
+(EngineCore pid=736354) INFO 08-14 14:00:24 [vllm.py:1025] Cudagraph is disabled under eager mode
+Found 3 JSON files to process
+- 현재 Processing : generated/runs/gemma4_e4b_sft_high/merged/cot-1-shot.jsonl
+Rendering conversations:   0%|          | 0/84 [00:00<?, ?it/s]INFO 08-14 14:00:33 [hf.py:314] Detected the chat template content format to be 'openai'. You can set `--chat-template-content-format` to override this.
+Rendering conversations:   1%|          | 1/84 [00:09<12:33,  9.07s/it]Rendering conversations: 100%|██████████| 84/84 [00:09<00:00,  9.16it/s]
+Processed prompts:   0%|          | 0/84 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]Processed prompts:   1%|          | 1/84 [00:05<08:08,  5.88s/it, est. speed input: 154.37 toks/s, output: 18.87 toks/s]Processed prompts:   5%|▍         | 4/84 [00:06<01:33,  1.17s/it, est. speed input: 613.32 toks/s, output: 76.77 toks/s]Processed prompts:   7%|▋         | 6/84 [00:06<00:53,  1.45it/s, est. speed input: 831.83 toks/s, output: 115.94 toks/s]Processed prompts:  13%|█▎        | 11/84 [00:06<00:20,  3.53it/s, est. speed input: 1611.74 toks/s, output: 217.69 toks/s]Processed prompts:  17%|█▋        | 14/84 [00:06<00:14,  4.68it/s, est. speed input: 2034.57 toks/s, output: 276.34 toks/s]Processed prompts:  21%|██▏       | 18/84 [00:06<00:09,  7.00it/s, est. speed input: 2610.99 toks/s, output: 360.11 toks/s]Processed prompts:  27%|██▋       | 23/84 [00:06<00:05, 10.73it/s, est. speed input: 3555.27 toks/s, output: 469.50 toks/s]Processed prompts:  37%|███▋      | 31/84 [00:06<00:02, 18.43it/s, est. speed input: 4868.29 toks/s, output: 648.27 toks/s]Processed prompts:  43%|████▎     | 36/84 [00:07<00:02, 20.94it/s, est. speed input: 5512.49 toks/s, output: 751.62 toks/s]Processed prompts:  49%|████▉     | 41/84 [00:07<00:01, 25.12it/s, est. speed input: 6418.38 toks/s, output: 861.46 toks/s]Processed prompts:  55%|█████▍    | 46/84 [00:07<00:01, 26.67it/s, est. speed input: 7150.00 toks/s, output: 966.60 toks/s]Processed prompts:  63%|██████▎   | 53/84 [00:07<00:00, 34.63it/s, est. speed input: 8155.65 toks/s, output: 1129.72 toks/s]Processed prompts:  70%|███████   | 59/84 [00:07<00:00, 36.88it/s, est. speed input: 9021.09 toks/s, output: 1262.49 toks/s]Processed prompts:  79%|███████▊  | 66/84 [00:07<00:00, 39.11it/s, est. speed input: 9990.32 toks/s, output: 1416.99 toks/s]Processed prompts:  86%|████████▌ | 72/84 [00:07<00:00, 41.90it/s, est. speed input: 10910.15 toks/s, output: 1554.89 toks/s]Processed prompts:  92%|█████████▏| 77/84 [00:08<00:00, 35.84it/s, est. speed input: 11534.16 toks/s, output: 1652.02 toks/s]Processed prompts:  98%|█████████▊| 82/84 [00:08<00:00, 19.18it/s, est. speed input: 11458.28 toks/s, output: 1679.11 toks/s]Processed prompts: 100%|██████████| 84/84 [00:09<00:00, 19.18it/s, est. speed input: 11224.12 toks/s, output: 1660.13 toks/s]Processed prompts: 100%|██████████| 84/84 [00:09<00:00,  9.25it/s, est. speed input: 11224.12 toks/s, output: 1660.13 toks/s]
+- 현재 Processing : generated/runs/gemma4_e4b_sft_high/merged/1-shot.jsonl
+Rendering conversations:   0%|          | 0/84 [00:00<?, ?it/s]Rendering conversations: 100%|██████████| 84/84 [00:00<00:00, 890.65it/s]
+Processed prompts:   0%|          | 0/84 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]Processed prompts:   1%|          | 1/84 [00:05<07:19,  5.29s/it, est. speed input: 117.12 toks/s, output: 23.99 toks/s]Processed prompts:   6%|▌         | 5/84 [00:05<01:03,  1.23it/s, est. speed input: 788.67 toks/s, output: 117.73 toks/s]Processed prompts:  10%|▉         | 8/84 [00:05<00:33,  2.24it/s, est. speed input: 1327.06 toks/s, output: 187.59 toks/s]Processed prompts:  13%|█▎        | 11/84 [00:05<00:20,  3.56it/s, est. speed input: 1668.63 toks/s, output: 258.44 toks/s]Processed prompts:  23%|██▎       | 19/84 [00:05<00:07,  8.26it/s, est. speed input: 3109.53 toks/s, output: 454.67 toks/s]Processed prompts:  31%|███       | 26/84 [00:05<00:04, 13.30it/s, est. speed input: 4257.86 toks/s, output: 628.74 toks/s]Processed prompts:  37%|███▋      | 31/84 [00:06<00:03, 16.07it/s, est. speed input: 5270.86 toks/s, output: 743.61 toks/s]Processed prompts:  44%|████▍     | 37/84 [00:06<00:02, 20.89it/s, est. speed input: 6258.00 toks/s, output: 891.10 toks/s]Processed prompts:  50%|█████     | 42/84 [00:06<00:01, 24.30it/s, est. speed input: 7242.19 toks/s, output: 1010.01 toks/s]Processed prompts:  56%|█████▌    | 47/84 [00:06<00:01, 28.55it/s, est. speed input: 8062.56 toks/s, output: 1132.05 toks/s]Processed prompts:  62%|██████▏   | 52/84 [00:06<00:01, 31.43it/s, est. speed input: 8734.77 toks/s, output: 1252.81 toks/s]Processed prompts:  68%|██████▊   | 57/84 [00:06<00:00, 35.29it/s, est. speed input: 9727.62 toks/s, output: 1377.34 toks/s]Processed prompts:  76%|███████▌  | 64/84 [00:06<00:00, 35.52it/s, est. speed input: 10758.36 toks/s, output: 1535.72 toks/s]Processed prompts:  82%|████████▏ | 69/84 [00:06<00:00, 33.24it/s, est. speed input: 11469.61 toks/s, output: 1643.73 toks/s]Processed prompts:  87%|████████▋ | 73/84 [00:07<00:00, 32.10it/s, est. speed input: 11974.81 toks/s, output: 1731.85 toks/s]Processed prompts:  92%|█████████▏| 77/84 [00:07<00:00, 23.91it/s, est. speed input: 12012.82 toks/s, output: 1785.61 toks/s]Processed prompts:  95%|█████████▌| 80/84 [00:07<00:00, 23.47it/s, est. speed input: 12251.76 toks/s, output: 1848.31 toks/s]Processed prompts:  99%|█████████▉| 83/84 [00:08<00:00, 14.84it/s, est. speed input: 12025.85 toks/s, output: 1843.26 toks/s]Processed prompts: 100%|██████████| 84/84 [00:08<00:00, 14.84it/s, est. speed input: 11401.91 toks/s, output: 1754.18 toks/s]Processed prompts: 100%|██████████| 84/84 [00:08<00:00,  9.79it/s, est. speed input: 11401.91 toks/s, output: 1754.18 toks/s]
+- 현재 Processing : generated/runs/gemma4_e4b_sft_high/merged/default.jsonl
+Rendering conversations:   0%|          | 0/84 [00:00<?, ?it/s]Rendering conversations: 100%|██████████| 84/84 [00:00<00:00, 900.99it/s]
+Processed prompts:   0%|          | 0/84 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]Processed prompts:   1%|          | 1/84 [00:04<06:13,  4.50s/it, est. speed input: 111.77 toks/s, output: 21.55 toks/s]Processed prompts:   2%|▏         | 2/84 [00:04<02:48,  2.05s/it, est. speed input: 246.21 toks/s, output: 43.58 toks/s]Processed prompts:   6%|▌         | 5/84 [00:04<00:48,  1.65it/s, est. speed input: 739.03 toks/s, output: 111.04 toks/s]Processed prompts:   8%|▊         | 7/84 [00:05<00:30,  2.54it/s, est. speed input: 894.96 toks/s, output: 154.58 toks/s]Processed prompts:  11%|█         | 9/84 [00:05<00:22,  3.36it/s, est. speed input: 1183.07 toks/s, output: 197.15 toks/s]Processed prompts:  15%|█▌        | 13/84 [00:05<00:11,  6.23it/s, est. speed input: 1988.88 toks/s, output: 296.08 toks/s]Processed prompts:  23%|██▎       | 19/84 [00:05<00:05, 11.50it/s, est. speed input: 3130.91 toks/s, output: 446.07 toks/s]Processed prompts:  37%|███▋      | 31/84 [00:05<00:02, 24.95it/s, est. speed input: 5297.56 toks/s, output: 753.51 toks/s]Processed prompts:  44%|████▍     | 37/84 [00:05<00:01, 28.35it/s, est. speed input: 6062.86 toks/s, output: 896.04 toks/s]Processed prompts:  51%|█████     | 43/84 [00:06<00:01, 30.44it/s, est. speed input: 7135.63 toks/s, output: 1038.77 toks/s]Processed prompts:  58%|█████▊    | 49/84 [00:06<00:00, 35.57it/s, est. speed input: 8045.53 toks/s, output: 1191.05 toks/s]Processed prompts:  65%|██████▌   | 55/84 [00:06<00:00, 33.74it/s, est. speed input: 9094.28 toks/s, output: 1323.00 toks/s]Processed prompts:  71%|███████▏  | 60/84 [00:06<00:00, 34.35it/s, est. speed input: 9974.00 toks/s, output: 1440.43 toks/s]Processed prompts:  77%|███████▋  | 65/84 [00:06<00:00, 36.20it/s, est. speed input: 10686.27 toks/s, output: 1563.56 toks/s]Processed prompts:  83%|████████▎ | 70/84 [00:06<00:00, 37.79it/s, est. speed input: 11399.82 toks/s, output: 1686.60 toks/s]Processed prompts:  89%|████████▉ | 75/84 [00:06<00:00, 29.98it/s, est. speed input: 12002.89 toks/s, output: 1776.70 toks/s]Processed prompts:  94%|█████████▍| 79/84 [00:07<00:00, 24.42it/s, est. speed input: 12348.46 toks/s, output: 1838.11 toks/s]Processed prompts:  98%|█████████▊| 82/84 [00:07<00:00, 21.79it/s, est. speed input: 12548.12 toks/s, output: 1886.03 toks/s]Processed prompts: 100%|██████████| 84/84 [00:07<00:00, 21.79it/s, est. speed input: 12173.45 toks/s, output: 1844.05 toks/s]Processed prompts: 100%|██████████| 84/84 [00:07<00:00, 10.72it/s, est. speed input: 12173.45 toks/s, output: 1844.05 toks/s]
+(EngineCore pid=736354) INFO 08-14 14:00:59 [core.py:1210] Shutdown initiated (timeout=0)
+(EngineCore pid=736354) INFO 08-14 14:00:59 [core.py:1233] Shutdown complete
+
+==============================================================
+[2026-08-14 14:01:01] Step 4/4: scoring evaluated/*.jsonl
+==============================================================
+| Category | Single turn | Multi turn |
+|---|---|---|
+| 추론(Reasoning) | 8.86 | 9.24 |
+| 수학(Math) | 8.00 | 8.43 |
+| 글쓰기(Writing) | 8.86 | 9.57 |
+| 코딩(Coding) | 8.29 | 9.29 |
+| 이해(Understanding) | 9.38 | 9.81 |
+| 문법(Grammar) | 8.71 | 9.29 |
+
+| Category | Score |
+|---|---|
+| Single turn | 8.68 |
+| Multi turn | 9.27 |
+| Overall | 8.98 |
+
+==============================================================
+[2026-08-14 14:01:01] Pipeline finished successfully
+==============================================================
