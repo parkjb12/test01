@@ -54,7 +54,7 @@ HF_TOKEN="${HF_TOKEN:-hf_여기에_본인_토큰}"
 ## 3. 이미지 빌드
 
 ```bash
-cd mixatis
+cd Intent
 docker build -t qwen3-mixatis:latest .
 ```
 
@@ -69,7 +69,7 @@ docker build -t qwen3-mixatis:latest .
 > 실행 전에 [2장](#2--실행-전-필수-hf_token-입력) 대로 `auto2.sh` 에 HF_TOKEN 을 넣었는지 먼저 확인하세요. 웹 콘솔은 `auto2.sh` 를 그대로 실행합니다.
 
 ```bash
-cd mixatis
+cd Intent
 python web_app.py            # 기본 0.0.0.0:8080  (PORT=9000 으로 변경 가능)
 ```
 
