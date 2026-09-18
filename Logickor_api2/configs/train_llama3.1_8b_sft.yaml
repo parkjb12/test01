@@ -1,0 +1,68 @@
+model: /home/parkjb/Llama-3.1-8B-Instruct
+data_path: data/logickor_sft_high_converted.jsonl
+max_seq_length: 2048
+
+lora:
+  r: 64
+  alpha: 128
+  dropout: 0.05
+  # Llama-3.1-8B (LlamaForCausalLM, 32 layers) exposes the standard
+  # attention/MLP projection names on every layer.
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+split:
+  train_ratio: 0.9
+
+training:
+  cuda_visible_devices: "0"
+  # early stopping 이 실제 종료를 결정하지만, num_train_epochs 는 LR 스케줄의 기준이기도 하다.
+  # 500 처럼 도달할 일 없는 상한을 두면 warmup_ratio 가 585 스텝으로 부풀어
+  # learning_rate 가 5e-5 에 닿기 전에 학습이 끝난다. 실제로 돌릴 길이에 맞춘다.
+  num_train_epochs: 30            # 30 x 39 = 1170 steps
+  learning_rate: 5.0e-5
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.03              # -> 35 steps (약 1 epoch)
+  optim: adamw_torch
+  weight_decay: 0.0
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 16
+  gradient_checkpointing: true
+  logging_steps: 10
+  eval_steps: 39                  # = 1 epoch (ceil(614/16))
+
+  # 체크포인트 저장 시 (early_stopping / load_best_model_at_end 에 필요)
+  save_checkpoints: true
+  save_steps: 39                  # eval_steps 와 같아야 best 체크포인트가 남는다
+  save_total_limit: 1
+  load_best_model_at_end: true
+  best_checkpoint_only: true
+  bf16: true
+  fp16: false
+  assistant_only_loss: true
+  completion_only_loss: false
+
+  # 체크포인트 저장 안할 시
+  # save_checkpoints: false
+  # save_steps: 0
+  # save_total_limit: 0
+  # load_best_model_at_end: false
+  # best_checkpoint_only: false
+  # bf16: true
+  # fp16: false
+  # assistant_only_loss: true
+  # completion_only_loss: false
+
+early_stopping:
+  # eval_steps=39 가 1 epoch 이므로 patience 5 = 5 epoch 연속 eval_loss 개선 없으면 중단.
+  # num_train_epochs 를 현실적인 값으로 낮췄으므로 여기서는 과적합 안전장치 역할만 한다.
+  enabled: true
+  patience: 5
+  threshold: 0.0

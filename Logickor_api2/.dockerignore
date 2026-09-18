@@ -1,0 +1,4 @@
+# 두 Dockerfile 은 requirements/ 만 COPY 한다. 나머지(데이터셋, runs/, 캐시 등)를
+# 빌드 컨텍스트에서 제외해 build 를 가볍게 유지한다.
+*
+!requirements/

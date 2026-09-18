@@ -1,0 +1,40 @@
+# syntax=docker/dockerfile:1
+#
+# etri-training 이미지 — LoRA SFT 학습(train/train_lora.py) 전용.
+#
+#   - requirements/etri-training.txt 의 버전 스냅샷을 `--no-deps` 로 그대로 설치한다.
+#   - 프로젝트 소스는 이미지에 넣지 않고 실행 시 마운트한다.
+#   - 컨테이너는 항상 호스트 사용자 uid 로 실행되므로(scripts/docker_env.sh)
+#     runs/ 산출물이 root 소유로 남지 않는다.
+#
+# build:
+#   docker build -f Dockerfile-train -t logickor-train:latest .
+#
+ARG PYTHON_IMAGE=python:3.12-slim-bookworm
+
+FROM ${PYTHON_IMAGE}
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# build-essential : triton / unsloth / cut-cross-entropy 의 런타임 JIT 컴파일
+# git            : requirements 의 `transformers @ git+https://...` 설치
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        ca-certificates \
+        curl \
+        git \
+        libgomp1 \
+        libnuma1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# CUDA 런타임은 requirements 의 nvidia-*-cu12 휠에 포함되어 있다.
+COPY requirements/etri-training.txt /tmp/etri-training.txt
+RUN python -m pip install --no-deps -r /tmp/etri-training.txt \
+    && rm -f /tmp/etri-training.txt \
+    && python -c "import torch, transformers, peft, trl; print('torch', torch.__version__)"
+
+WORKDIR /workspace
+CMD ["bash"]
