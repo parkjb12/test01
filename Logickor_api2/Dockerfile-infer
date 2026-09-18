@@ -1,0 +1,52 @@
+# syntax=docker/dockerfile:1
+#
+# etri-infer 이미지 — 생성(generator) / 채점(evaluator) / 집계(score) / 웹 UI 실행용.
+#
+#   - requirements/etri-infer.txt 의 버전 스냅샷을 `--no-deps` 로 그대로 설치한다.
+#   - 프로젝트 소스는 이미지에 넣지 않고 실행 시 마운트한다.
+#     (코드를 고쳐도 다시 build 할 필요가 없다.)
+#   - 컨테이너는 항상 호스트 사용자 uid 로 실행되므로(scripts/docker_env.sh)
+#     생성물이 root 소유로 남지 않는다.
+#
+# build:
+#   docker build -f Dockerfile-infer -t logickor-infer:latest .
+#
+ARG PYTHON_IMAGE=python:3.11-slim-bookworm
+ARG DOCKER_CLI_IMAGE=docker:28-cli
+
+# web/run.sh 는 이 이미지 안에서 웹 UI 를 띄우고, 그 안의 scripts/auto.sh 는 호스트
+# 도커 데몬에 형제 컨테이너(train/infer)를 만든다. 그래서 도커 "클라이언트"만 넣는다.
+FROM ${DOCKER_CLI_IMAGE} AS dockercli
+
+FROM ${PYTHON_IMAGE}
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# build-essential : triton 이 런타임에 커널을 JIT 컴파일할 때 필요
+# libgomp1/libnuma1: torch, vLLM
+# libglib2.0-0/libgl1: opencv-python-headless (mistral_common 의존)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        ca-certificates \
+        curl \
+        git \
+        libgl1 \
+        libglib2.0-0 \
+        libgomp1 \
+        libnuma1 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=dockercli /usr/local/bin/docker /usr/local/bin/docker
+
+# CUDA 런타임은 requirements 의 nvidia-*-cu12 휠에 포함되어 있으므로
+# 별도의 CUDA 베이스 이미지가 필요하지 않다(호스트 NVIDIA 드라이버만 있으면 된다).
+COPY requirements/etri-infer.txt /tmp/etri-infer.txt
+RUN python -m pip install --no-deps -r /tmp/etri-infer.txt \
+    && rm -f /tmp/etri-infer.txt \
+    && python -c "import torch, vllm, transformers, fastapi; print('torch', torch.__version__)"
+
+WORKDIR /workspace
+CMD ["bash"]
