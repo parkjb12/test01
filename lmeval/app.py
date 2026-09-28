@@ -26,7 +26,7 @@ import yaml
 from flask import Flask, jsonify, render_template, request, send_from_directory
 
 import eval_tasks as REG
-from model_loader import (MODEL_CATALOG, hf_token, model_status,
+from model_loader import (MODEL_CATALOG, catalog_entry, hf_token, model_status,
                           pretty_model_name, repo_id_of)
 
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -76,7 +76,7 @@ PROC: dict = {"popen": None, "out_dir": None, "log_path": None,
 # --------------------------------------------------------------------------
 def base_defaults() -> dict:
     return {
-        "model_path": MODEL_CATALOG[0]["repo_id"],
+        "model_path": MODEL_CATALOG[0]["model_path"],
         "run_dir": MODEL_CATALOG[0]["run_dir"],
         "seed": 42,
         "gpus": "0",
@@ -228,9 +228,11 @@ def _human_size(n: int) -> str:
 def model_info(model_path: str) -> dict:
     """모델 지정값 → UI 표시용 정보(캐시 여부/다운로드 필요 여부 포함)."""
     st = model_status(model_path)
-    cat = next((m for m in MODEL_CATALOG if m["repo_id"] == st["repo_id"]), None)
+    cat = catalog_entry(model_path)
     ready = st["cached"] or st["downloadable"]
-    if st["cached"]:
+    if st["cached"] and st["kind"] == "local_path" and not st["repo_id"]:
+        note = "로컬 디렉터리 (다운로드 불필요)"
+    elif st["cached"]:
         note = "캐시에 있음"
     elif st["downloadable"]:
         note = "캐시에 없음 — 실행 시 자동 다운로드"
@@ -254,9 +256,9 @@ def api_models():
     """드롭다운용 모델 목록 + 각 모델의 캐시 상태."""
     items = []
     for m in MODEL_CATALOG:
-        st = model_status(m["repo_id"])
+        st = model_status(m["model_path"])
         items.append({**m, "cached": st["cached"], "snapshot": st["snapshot"],
-                      "size_bytes": st["size_bytes"],
+                      "kind": st["kind"], "size_bytes": st["size_bytes"],
                       "size_text": _human_size(st["size_bytes"])})
     return jsonify({"models": items, "hf_token": bool(hf_token()),
                     "hub_cache": os.path.expanduser(
@@ -339,7 +341,8 @@ def api_run():
         return jsonify({"ok": False,
                         "error": f"모델을 찾을 수 없습니다: {cfg['model_path']} — "
                                  f"'org/name' 형태의 HF repo id 또는 config.json 이 "
-                                 f"있는 로컬 경로를 입력하세요."}), 400
+                                 f"있는 로컬 경로(예: /home/parkjb/Llama-3.1-8B-Instruct)"
+                                 f"를 입력하세요."}), 400
     if minfo["gated"] and not minfo["cached"] and not minfo["hf_token"]:
         return jsonify({"ok": False,
                         "error": f"'{minfo['repo_id']}' 는 gated 모델이라 다운로드에 "
@@ -477,7 +480,7 @@ def main() -> None:
         save_config(base_defaults())
     quiet_access_log(not a.access_log)
     print(f"  →  http://localhost:{a.port}  (설정: {DEFAULT_CONFIG})")
-    print(f"  모델    : {', '.join(m['repo_id'] for m in MODEL_CATALOG)}")
+    print(f"  모델    : {', '.join(m['model_path'] for m in MODEL_CATALOG)}")
     print(f"  HF_TOKEN: {'설정됨' if hf_token() else '없음 (gated 모델은 export HF_TOKEN 필요)'}")
     if not a.access_log:
         print("  로그    : 폴링 요청 액세스 로그는 숨깁니다 (--access-log 로 켜기)")

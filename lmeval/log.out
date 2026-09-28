@@ -1,0 +1,29 @@
+nohup: ignoring input
+  →  http://localhost:8000  (설정: /home/parkjb/work/lmeval/configs/default.yaml)
+  모델    : Qwen/Qwen3-8B, google/gemma-4-E4B-it
+  HF_TOKEN: 설정됨
+  로그    : 폴링 요청 액세스 로그는 숨깁니다 (--access-log 로 켜기)
+ * Serving Flask app 'app'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8000
+ * Running on http://129.254.222.147:8000
+Press CTRL+C to quit
+10.254.74.143 - - [27/Aug/2026 08:52:45] "GET / HTTP/1.1" 200 -
+10.254.74.143 - - [27/Aug/2026 08:52:45] "GET /static/app.js HTTP/1.1" 304 -
+10.254.74.143 - - [27/Aug/2026 08:52:45] "GET /static/style.css HTTP/1.1" 304 -
+10.254.74.143 - - [27/Aug/2026 08:52:46] "GET /api/models HTTP/1.1" 200 -
+10.254.74.143 - - [27/Aug/2026 08:53:37] "POST /api/run HTTP/1.1" 200 -
+10.254.74.143 - - [27/Aug/2026 08:57:47] "GET / HTTP/1.1" 200 -
+10.254.74.143 - - [27/Aug/2026 08:57:47] "GET /static/style.css HTTP/1.1" 304 -
+10.254.74.143 - - [27/Aug/2026 08:57:47] "GET /static/app.js HTTP/1.1" 304 -
+10.254.74.143 - - [27/Aug/2026 08:57:47] "GET /api/models HTTP/1.1" 200 -
+10.254.74.143 - - [27/Aug/2026 11:23:35] "GET / HTTP/1.1" 200 -
+10.254.74.143 - - [27/Aug/2026 11:23:35] "GET /static/style.css HTTP/1.1" 304 -
+10.254.74.143 - - [27/Aug/2026 11:23:35] "GET /static/app.js HTTP/1.1" 304 -
+10.254.74.143 - - [27/Aug/2026 11:23:35] "GET /api/models HTTP/1.1" 200 -
+10.254.74.143 - - [27/Aug/2026 11:23:54] "GET / HTTP/1.1" 200 -
+10.254.74.143 - - [27/Aug/2026 11:23:54] "GET /static/style.css HTTP/1.1" 304 -
+10.254.74.143 - - [27/Aug/2026 11:23:54] "GET /static/app.js HTTP/1.1" 304 -
+10.254.74.143 - - [27/Aug/2026 11:23:54] "GET /api/models HTTP/1.1" 200 -

@@ -9,18 +9,23 @@
 
 좌측 **MODEL** 드롭다운에서 고르거나, `직접 입력` 으로 아무 repo id/경로나 넣을 수 있습니다.
 
-| 선택 | repo id | 비고 |
+| 선택 | 모델 지정값 | 비고 |
 |---|---|---|
+| Llama 3.1 8B Instruct (로컬) | `/home/parkjb/Llama-3.1-8B-Instruct` | `LlamaForCausalLM`, bfloat16 · **로컬 디렉터리(기본값)** · 다운로드/토큰 불필요 |
 | Qwen3 8B | `Qwen/Qwen3-8B` | `Qwen3ForCausalLM`, bfloat16 |
 | Gemma 4 E4B IT | `google/gemma-4-E4B-it` | `Gemma4ForConditionalGeneration` (멀티모달 래퍼 → 텍스트 디코더만 사용), **gated** |
 
 모델 지정은 세 가지 형태를 모두 받습니다.
 
-- repo id — `Qwen/Qwen3-8B` (권장, **캐시에 없으면 실행 시 자동 다운로드**)
+- 로컬 모델 디렉터리 — `/home/parkjb/Llama-3.1-8B-Instruct` (`config.json` 이 있는 디렉터리)
+- repo id — `Qwen/Qwen3-8B` (**캐시에 없으면 실행 시 자동 다운로드**)
 - HF 캐시 디렉터리 — `~/.cache/huggingface/hub/models--Qwen--Qwen3-8B`
-- 로컬 스냅샷 경로 — `config.json` 이 있는 디렉터리
 
-캐시 디렉터리를 넣어도 내부적으로 repo id 로 환원해, 파일이 일부만 받아져 있으면
+로컬 디렉터리를 지정하면 허브를 전혀 거치지 않습니다. `Download` 단계가 아예 생기지
+않고 그 경로를 그대로 로드하므로, 인터넷이나 `HF_TOKEN` 없이도 평가할 수 있습니다.
+(meta 배포본의 `original/consolidated.*.pth` 는 평가에 쓰이지 않아 용량 표시에서 제외됩니다.)
+
+캐시 디렉터리를 넣으면 내부적으로 repo id 로 환원해, 파일이 일부만 받아져 있으면
 빠진 파일만 이어받습니다.
 
 ### HF_TOKEN (gated 모델)
@@ -82,8 +87,8 @@ ssh -L 7860:localhost:7860 <user>@<server>
 CLI 로만 돌릴 수도 있습니다.
 
 ```bash
-# 스모크 테스트 (태스크당 20 샘플)
-python run_eval.py --model Qwen/Qwen3-8B \
+# 로컬 Llama-3.1-8B-Instruct 스모크 테스트 (태스크당 20 샘플)
+python run_eval.py --model /home/parkjb/Llama-3.1-8B-Instruct \
   --tasks arc_easy,kobest_copa,squadv2 --limit 20 \
   --out runs/smoke --apply-chat-template
 
@@ -220,7 +225,10 @@ KoBEST 는 0~1) 아래 순서로 판정해 화면에는 **전부 0~100 으로 �
 - 객관식(ARC/KoBEST) · 생성+EM(GSM8K) · F1(SQuADv2) · BLEU/ROUGE(TruthfulQA-gen)
   · 커스텀 파일 평가까지 `limit=8` 스모크 통과 (`runs/smoke_example/`)
 - 웹 UI 실행/폴링/중지(SIGTERM) 전 과정 및 모든 API 엔드포인트
-- gemma 계열은 `add_bos_token=True` 로 자동 설정(하네스 권고)
+- gemma / llama / mistral 계열은 `add_bos_token=True` 로 자동 설정(하네스 권고).
+  chat template 로 이미 BOS 가 붙은 입력은 lm-eval 이 중복 추가하지 않습니다.
+- 로컬 경로 모델(`/home/parkjb/Llama-3.1-8B-Instruct`)로 `arc_easy` · `kobest_boolq`
+  · `squadv2` · 커스텀 파일 `limit=4` 스모크 통과 (`LlamaForCausalLM` 8.03B, bf16)
 - 설치된 버전: python 3.11 · torch 2.13.0+cu130 · transformers 5.16.0.dev0 · lm_eval 0.4.12
 
 점수 자체는 `limit` 을 준 스모크 값이므로 모델 성능 지표로 해석하면 안 됩니다.

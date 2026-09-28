@@ -7,7 +7,7 @@ const FIELDS = ['model_path', 'run_dir', 'seed', 'gpus', 'batch_size', 'max_leng
   'custom_max_new_tokens', 'custom_system_prompt'];
 const CHECKS = ['apply_chat_template', 'fewshot_as_multiturn', 'log_samples', 'parallelize'];
 const GROUP_COLOR = { core_en: 'b', korean: 'g', generative: 'p', custom: 'a' };
-const GROUP_HEX = { core_en: '#60a5fa', korean: '#4ade80', generative: '#c4b5fd', custom: '#fbbf24' };
+const GROUP_HEX = { core_en: '#2563eb', korean: '#16a34a', generative: '#7c3aed', custom: '#d97706' };
 
 let REGISTRY = null;
 let DEFAULTS = {};
@@ -44,10 +44,12 @@ function renderModelPresets() {
   sl.innerHTML = '';
   MODELS.models.forEach((m) => {
     const o = document.createElement('option');
-    o.value = m.repo_id;
-    o.textContent = `${m.label} — ${m.repo_id}` +
-      (m.cached ? `  ✓ 캐시 (${m.size_text})` : '  ⬇ 다운로드 필요') +
-      (m.gated ? '  🔒' : '');
+    o.value = m.model_path;
+    // 로컬 경로 모델은 다운로드 개념이 없으므로 별도 표기한다.
+    const state = m.local
+      ? (m.cached ? `  📁 로컬 (${m.size_text})` : '  ✕ 경로 없음')
+      : (m.cached ? `  ✓ 캐시 (${m.size_text})` : '  ⬇ 다운로드 필요');
+    o.textContent = `${m.label} — ${m.model_path}` + state + (m.gated ? '  🔒' : '');
     o.title = m.note || '';
     sl.appendChild(o);
   });
@@ -60,7 +62,7 @@ function renderModelPresets() {
 /** MODEL_PATH 값에 맞춰 드롭다운 선택 상태를 맞춘다. */
 function syncPreset() {
   const cur = ($('model_path').value || '').trim();
-  const hit = MODELS.models.some((m) => m.repo_id === cur);
+  const hit = MODELS.models.some((m) => m.model_path === cur);
   $('model_preset').value = hit ? cur : '__custom__';
   $('modelPathFld').style.display = hit ? 'none' : '';
 }
@@ -72,7 +74,7 @@ function onPresetChange() {
     $('model_path').focus();
     return;
   }
-  const m = MODELS.models.find((x) => x.repo_id === v);
+  const m = MODELS.models.find((x) => x.model_path === v);
   $('model_path').value = v;
   $('modelPathFld').style.display = 'none';
   // RUN_DIR 이 다른 모델의 기본값이면 함께 바꿔 준다(직접 지정한 값은 보존).
@@ -136,10 +138,10 @@ async function loadConfig() {
 function showDerived(d) {
   const m = d.model || {};
   $('i_resolved').textContent = d.resolved_model + (d.model_exists ? '' : '  ⚠ 없음');
-  $('i_resolved').style.color = d.model_exists ? '#cbd5e1' : '#fca5a5';
+  $('i_resolved').style.color = d.model_exists ? '#374151' : '#b91c1c';
   $('i_name').textContent = d.model_name || '-';
   $('i_token').textContent = d.hf_token ? '설정됨' : '없음 (gated 모델은 필요)';
-  $('i_token').style.color = d.hf_token ? '#4ade80' : '#94a3b8';
+  $('i_token').style.color = d.hf_token ? '#15803d' : '#9ca3af';
   $('i_results').textContent = d.results_json;
   $('i_log').textContent = d.log_path;
   renderModelStat(d);
@@ -316,11 +318,11 @@ function drawRadar(st) {
       i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
     }
     ctx.closePath();
-    ctx.strokeStyle = ring === 4 ? '#39404d' : '#262b34';
+    ctx.strokeStyle = ring === 4 ? '#cbd2de' : '#e4e8f0';
     ctx.lineWidth = 1;
     ctx.stroke();
   }
-  ctx.strokeStyle = '#262b34';
+  ctx.strokeStyle = '#e4e8f0';
   for (let i = 0; i < n; i++) {
     ctx.beginPath();
     ctx.moveTo(cx, cy);
@@ -336,21 +338,21 @@ function drawRadar(st) {
     i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
   });
   ctx.closePath();
-  ctx.fillStyle = 'rgba(59,130,246,.22)';
+  ctx.fillStyle = 'rgba(37,99,235,.16)';
   ctx.fill();
-  ctx.strokeStyle = '#60a5fa';
+  ctx.strokeStyle = '#2563eb';
   ctx.lineWidth = 2;
   ctx.stroke();
   data.forEach((d, i) => {
     const r = (R * Math.max(0, Math.min(100, d.value))) / 100;
     ctx.beginPath();
     ctx.arc(cx + r * Math.cos(ang(i)), cy + r * Math.sin(ang(i)), 3, 0, 7);
-    ctx.fillStyle = '#4ade80';
+    ctx.fillStyle = '#16a34a';
     ctx.fill();
   });
 
   // 라벨
-  ctx.fillStyle = '#9aa2af';
+  ctx.fillStyle = '#6b7280';
   ctx.font = '11px sans-serif';
   data.forEach((d, i) => {
     const a = ang(i);
@@ -360,7 +362,7 @@ function drawRadar(st) {
     ctx.fillText(d.category, x, y);
   });
   $('radarLegend').innerHTML = data
-    .map((d) => `<span>${d.category} <b style="color:#cbd5e1">${fmt(d.value)}</b></span>`).join('');
+    .map((d) => `<span>${d.category} <b style="color:#374151">${fmt(d.value)}</b></span>`).join('');
 }
 
 /* ------------------------------------------------------------ 초기 상태 */
@@ -435,7 +437,7 @@ function renderStatus(res) {
       ` · limit ${c.limit ?? '전체'} · batch ${c.batch_size ?? '-'}` +
       ` · few-shot ${c.num_fewshot ?? '권장값'}` +
       ` · chat_template ${c.apply_chat_template ? 'on' : 'off'}` +
-      (st.error ? `<br><span style="color:#fca5a5">오류: ${st.error}</span>` : '');
+      (st.error ? `<br><span style="color:#b91c1c">오류: ${st.error}</span>` : '');
   }
 
   const warns = st.warnings || [];

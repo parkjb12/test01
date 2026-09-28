@@ -3,12 +3,14 @@
 run_eval.py — lm-evaluation-harness 로 대표 벤치마크 + 한국어 + 생성형 지표를
 순차 평가하고, 진행 상황을 status.json 으로 실시간 기록한다.
 
-단독 실행 (--model 은 HF repo id / 캐시 디렉터리 / 로컬 스냅샷 모두 가능):
+단독 실행 (--model 은 HF repo id / 캐시 디렉터리 / 로컬 모델 디렉터리 모두 가능):
+  python run_eval.py --model /home/parkjb/Llama-3.1-8B-Instruct \
+      --tasks arc_easy,hellaswag,kobest_boolq --limit 50 --out runs/llama31_8b_eval
   python run_eval.py --model Qwen/Qwen3-8B \
       --tasks arc_easy,hellaswag,kobest_boolq,squadv2 --limit 50 --out runs/test
-  python run_eval.py --model google/gemma-4-E4B-it --tasks kobest_boolq --limit 20
 
-캐시에 없는 repo id 는 자동으로 내려받는다. gated 모델은 `export HF_TOKEN=...` 필요.
+로컬 디렉터리(config.json 이 있는 경로)는 다운로드 단계를 건너뛰고 그대로 로드한다.
+캐시에 없는 repo id 는 자동으로 내려받으며, gated 모델은 `export HF_TOKEN=...` 필요.
 
 웹 UI(app.py)는 이 스크립트를 서브프로세스로 띄우고 status.json / run.log 를 읽는다.
 """
@@ -245,12 +247,13 @@ def summarize() -> None:
 # --------------------------------------------------------------------------
 # 메인 평가 루프
 # --------------------------------------------------------------------------
-def build_stages(sel_items: list[dict], has_custom: bool) -> list[dict]:
-    stages = [
-        dict(key="prepare", name="Prepare", sub="준비", status="pending"),
-        dict(key="download", name="Download", sub="모델 내려받기", status="pending"),
-        dict(key="load", name="Load", sub="모델 로드", status="pending"),
-    ]
+def build_stages(sel_items: list[dict], has_custom: bool,
+                 needs_download: bool = True) -> list[dict]:
+    stages = [dict(key="prepare", name="Prepare", sub="준비", status="pending")]
+    if needs_download:
+        stages.append(dict(key="download", name="Download", sub="모델 내려받기",
+                           status="pending"))
+    stages.append(dict(key="load", name="Load", sub="모델 로드", status="pending"))
     if any(i["group"] == "core_en" for i in sel_items):
         stages.append(dict(key="core_en", name="English", sub="영어 벤치마크",
                            status="pending"))
@@ -322,6 +325,8 @@ def main() -> int:
 
     resolved = resolve_model_path(args.model)
     mstat = model_status(args.model)
+    # repo id 가 없는 로컬 디렉터리는 허브를 거치지 않는다 → Download 단계 자체를 뺀다.
+    needs_download = bool(mstat["downloadable"]) and not args.no_download
     total_units = len(harness_items) + (1 if has_custom else 0)
 
     _state.clear()
@@ -353,7 +358,7 @@ def main() -> int:
             "custom_file": args.custom_file,
             "out": _out_dir,
         },
-        "stages": build_stages(sel_items, has_custom),
+        "stages": build_stages(sel_items, has_custom, needs_download),
         "progress": {
             "tasks_total": total_units, "tasks_done": 0,
             "overall_pct": 0.0, "current_pct": 0.0,
@@ -381,7 +386,10 @@ def main() -> int:
     log(f"=== lm-eval 통합 평가 시작 ===")
     log(f"모델      : {args.model}")
     log(f"실제 경로 : {resolved}")
-    log(f"캐시      : {'있음 · ' + str(mstat['snapshot']) if mstat['cached'] else '없음 (다운로드 필요)'}")
+    if mstat["kind"] == "local_path":
+        log(f"모델 종류 : 로컬 디렉터리 (다운로드 없음)")
+    else:
+        log(f"캐시      : {'있음 · ' + str(mstat['snapshot']) if mstat['cached'] else '없음 (다운로드 필요)'}")
     log(f"HF_TOKEN  : {'설정됨' if mstat['hf_token'] else '없음'}")
     log(f"벤치마크  : {[i['key'] for i in sel_items]}")
     log(f"출력      : {_out_dir}")
@@ -403,8 +411,17 @@ def main() -> int:
         set_stage("prepare", "done")
 
         # ---------------- 모델 다운로드 (캐시에 없으면) ----------------
-        set_stage("download", "running")
-        if args.no_download:
+        if not needs_download:
+            snap = mstat["snapshot"] or (resolved if os.path.isdir(resolved) else None)
+            if not snap or not os.path.exists(os.path.join(snap, "config.json")):
+                raise FileNotFoundError(
+                    f"모델을 찾을 수 없습니다: {args.model} — config.json 이 있는 "
+                    f"로컬 디렉터리 또는 'org/name' 형태의 HF repo id 를 지정하세요.")
+            resolved = snap
+            _state["model"].update(resolved=snap, snapshot=snap, cached=True)
+            log(f"[model] 로컬 디렉터리 사용: {resolved}")
+        elif args.no_download:
+            set_stage("download", "running")
             if not mstat["cached"]:
                 raise FileNotFoundError(
                     f"--no-download 인데 캐시에 모델이 없습니다: {args.model}")
@@ -412,6 +429,7 @@ def main() -> int:
             set_stage("download", "done", "캐시 사용")
             log(f"[download] --no-download · 캐시 사용: {resolved}")
         else:
+            set_stage("download", "running")
             _state["progress"]["current_label"] = "모델 내려받기"
             _state["progress"]["current_desc"] = pretty_model_name(args.model)
             write_status()

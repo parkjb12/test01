@@ -2,9 +2,11 @@
 model_loader.py — HuggingFace repo id / 캐시 / 로컬 경로의 모델을 안전하게 로드한다.
 
 모델은 다음 세 가지 형태로 지정할 수 있고 모두 동일하게 동작한다.
-  - repo id            : ``Qwen/Qwen3-8B``, ``google/gemma-4-E4B-it``  (권장)
+  - repo id            : ``Qwen/Qwen3-8B``, ``google/gemma-4-E4B-it``
   - HF 캐시 디렉터리    : ``~/.cache/huggingface/hub/models--Qwen--Qwen3-8B``
-  - 로컬 스냅샷 경로    : ``/path/to/snapshot`` (config.json 이 있는 디렉터리)
+  - 로컬 모델 디렉터리  : ``/home/parkjb/Llama-3.1-8B-Instruct`` (config.json 이 있는 디렉터리)
+
+로컬 디렉터리로 지정하면 허브를 전혀 거치지 않는다(다운로드/토큰 불필요).
 
 repo id 로 지정하면 캐시에 없을 때 자동으로 내려받는다(:func:`download_model`).
 gated 모델(gemma 계열)은 ``export HF_TOKEN=...`` 이 필요하다.
@@ -37,18 +39,27 @@ HF_HUB = _hf_hub_cache()
 
 # ---------------------------------------------------------------------------
 # 선택 가능한 모델 카탈로그 (웹 UI 드롭다운)
-#   repo_id 로 적어 두면 캐시에 없을 때 자동 다운로드된다.
+#   model_path : 평가에 그대로 넘기는 값. repo id 또는 로컬 디렉터리 경로.
+#   repo_id    : 허브 모델일 때만 채운다(캐시에 없으면 자동 다운로드).
+#                로컬 전용 항목은 None → 다운로드 단계를 건너뛴다.
 # ---------------------------------------------------------------------------
 MODEL_CATALOG: list[dict] = [
-    dict(repo_id="Qwen/Qwen3-8B", label="Qwen3 8B", params="8.2B", gated=False,
+    dict(model_path="/home/parkjb/Llama-3.1-8B-Instruct", repo_id=None,
+         label="Llama 3.1 8B Instruct (로컬)", params="8.03B", gated=False,
+         local=True, run_dir="runs/llama31_8b_eval",
+         note="로컬 경로의 LlamaForCausalLM · chat template + BOS 권장 · 다운로드 불필요"),
+    dict(model_path="Qwen/Qwen3-8B", repo_id="Qwen/Qwen3-8B",
+         label="Qwen3 8B", params="8.2B", gated=False, local=False,
          run_dir="runs/qwen3_8b_eval",
          note="Qwen3 dense · chat template 권장 (thinking 모드 기본)"),
-    dict(repo_id="google/gemma-4-E4B-it", label="Gemma 4 E4B IT", params="E4B(유효 4B)",
-         gated=True, run_dir="runs/gemma4_e4b_eval",
+    dict(model_path="google/gemma-4-E4B-it", repo_id="google/gemma-4-E4B-it",
+         label="Gemma 4 E4B IT", params="E4B(유효 4B)", gated=True, local=False,
+         run_dir="runs/gemma4_e4b_eval",
          note="멀티모달 래퍼 · chat template + BOS 권장 · HF_TOKEN 필요(gated)"),
 ]
 
-DEFAULT_MODEL = MODEL_CATALOG[0]["repo_id"]
+DEFAULT_MODEL = MODEL_CATALOG[0]["model_path"]
+
 
 _REPO_ID_RE = re.compile(r"^[A-Za-z0-9][\w.\-]*/[\w.\-]+$")
 
@@ -156,6 +167,26 @@ def pretty_model_name(path: str) -> str:
     return os.path.basename((path or "").rstrip("/")) or path
 
 
+def catalog_entry(path_or_repo: str) -> dict | None:
+    """
+    카탈로그에서 이 모델 지정값에 해당하는 항목을 찾는다.
+    로컬 경로 항목도 찾을 수 있도록 model_path / repo_id / 정규화 경로를 모두 본다.
+    """
+    raw = (path_or_repo or "").strip().rstrip("/")
+    if not raw:
+        return None
+    cands = {raw, os.path.expanduser(raw), os.path.abspath(os.path.expanduser(raw))}
+    rid = repo_id_of(raw)
+    for m in MODEL_CATALOG:
+        mp = str(m.get("model_path") or "").rstrip("/")
+        if mp and (mp in cands
+                   or os.path.abspath(os.path.expanduser(mp)) in cands):
+            return m
+        if rid and m.get("repo_id") == rid:
+            return m
+    return None
+
+
 # ---------------------------------------------------------------------------
 # 캐시 상태 / 다운로드
 # ---------------------------------------------------------------------------
@@ -172,10 +203,18 @@ def hf_token() -> str | None:
         return None
 
 
+# 평가에 쓰이지 않는 원본 체크포인트(meta 배포본의 original/consolidated.*.pth 등).
+# 용량 표시에서 빼야 실제로 로드되는 크기와 맞는다.
+_SKIP_EXT = (".pth", ".gguf", ".msgpack", ".h5", ".onnx", ".tflite")
+
+
 def _dir_size(path: str) -> int:
     total = 0
-    for root, _dirs, files in os.walk(path):
+    for root, dirs, files in os.walk(path):
+        dirs[:] = [d for d in dirs if d != "original"]
         for fn in files:
+            if fn.endswith(_SKIP_EXT):
+                continue
             fp = os.path.join(root, fn)
             try:
                 total += os.stat(fp, follow_symlinks=True).st_size
@@ -196,6 +235,7 @@ def model_status(path_or_repo: str) -> dict:
         "repo_id": rid,
         "resolved": resolve_model_path(raw),
         "kind": "repo_id" if (rid and not local) else "local_path",
+        "local": local,
         "cached": snap is not None,
         "snapshot": snap,
         "cache_dir": cdir,
@@ -213,12 +253,14 @@ def download_model(path_or_repo: str, log=print, max_workers: int = 8) -> str:
     """
     rid = repo_id_of(path_or_repo)
     if not rid:
+        # 로컬 디렉터리(예: /home/parkjb/Llama-3.1-8B-Instruct) — 내려받을 것이 없다.
         snap = snapshot_dir(path_or_repo)
         if snap:
+            log(f"[download] 로컬 경로를 그대로 사용합니다: {snap}")
             return snap
         raise FileNotFoundError(
             f"모델을 찾을 수 없습니다: {path_or_repo} "
-            f"(로컬 경로가 없고 'org/name' 형태의 repo id 도 아님)")
+            f"(config.json 이 있는 로컬 경로가 아니고 'org/name' 형태의 repo id 도 아님)")
 
     from huggingface_hub import snapshot_download
 
@@ -257,8 +299,16 @@ def download_model(path_or_repo: str, log=print, max_workers: int = 8) -> str:
 
 def load_tokenizer(model_path: str, trust_remote_code: bool = True):
     from transformers import AutoTokenizer
-    tok = AutoTokenizer.from_pretrained(
-        model_path, trust_remote_code=trust_remote_code)
+    # clean_up_tokenization_spaces=False: llama3 계열 BPE 토크나이저에서 이 후처리는
+    # 출력을 망가뜨리므로 끈다(transformers 5 가 켜져 있으면 경고를 낸다).
+    try:
+        tok = AutoTokenizer.from_pretrained(
+            model_path, trust_remote_code=trust_remote_code,
+            clean_up_tokenization_spaces=False)
+    except TypeError:
+        tok = AutoTokenizer.from_pretrained(
+            model_path, trust_remote_code=trust_remote_code)
+    # Llama-3.1-Instruct 처럼 pad 토큰이 없는 모델은 eos 로 채운다(좌측 패딩 생성용).
     if tok.pad_token is None and tok.eos_token is not None:
         tok.pad_token = tok.eos_token
     return tok
